@@ -5,19 +5,30 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
+import edu.wpi.first.wpilibj.motorcontrol.Victor;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Talon1 extends SubsystemBase {
+public class MultiUseVictor extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
 
-  private final TalonFX talon1;
+  private final PWMVictorSPX victor;
 
-  public Talon1() {
-    talon1 = new TalonFX(Constants.CAN.Talon1);
+  public MultiUseVictor(int CANID) {
+    victor = new PWMVictorSPX(CANID);
+  }
+
+  public void runAtSpeed(double speed) {
+    victor.set(speed);
+  }
+
+  public void stop() {
+    victor.set(0);
   }
 
   @Override

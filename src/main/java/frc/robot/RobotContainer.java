@@ -8,13 +8,16 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.RunTalon;
+import frc.robot.commands.RunVictor;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.MultiUseTalon;
+import frc.robot.subsystems.MultiUseVictor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,8 +27,16 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public final ExampleSubsystem m_exampleSubsystem;
   public final Chassis chassis;
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  //Mechanism Motors
+  public final MultiUseTalon multiUseTalon1;
+  public final MultiUseTalon multiUseTalon2;
+  public final MultiUseTalon multiUseTalon3;
+  public final MultiUseVictor multiUseVictor4;
+  public final MultiUseTalon multiUseTalon5;
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final PS5Controller driverController = new PS5Controller(0);
@@ -33,8 +44,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // Configure the trigger bindings
+    m_exampleSubsystem = new ExampleSubsystem();
+
     chassis = new Chassis();
+    multiUseTalon1 = new MultiUseTalon(Constants.CAN.Talon1);
+    multiUseTalon2 = new MultiUseTalon(Constants.CAN.Talon2);
+    multiUseTalon3 = new MultiUseTalon(Constants.CAN.Talon3);
+    multiUseVictor4 = new MultiUseVictor(Constants.CAN.Victor4);
+    multiUseTalon5 = new MultiUseTalon(Constants.CAN.Talon5);
+
+    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -48,7 +67,13 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverController, Constants.XBox.BTN_A).whileTrue(new TeleopDrive(chassis));
+    new JoystickButton(driverController, Constants.XBox.POV_N).whileTrue(new TeleopDrive(chassis));
+
+    new JoystickButton(driverController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon1));
+    new JoystickButton(driverController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon2));
+    new JoystickButton(driverController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon3));
+    new JoystickButton(driverController, Constants.XBox.BTN_Y).whileTrue(new RunVictor(multiUseVictor4));
+    new JoystickButton(driverController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon5));
   }
 
   /**
