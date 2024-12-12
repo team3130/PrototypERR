@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Autos;
@@ -55,9 +57,10 @@ public class RobotContainer {
     multiUseTalon5 = new MultiUseTalon(Constants.CAN.Talon5);
 
     // Configure the trigger bindings
-
     configureBindings();
+    exportShuffleBoardData();
 
+    // Set Default commands
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
   }
 
@@ -76,6 +79,15 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon3));
     new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new RunVictor(multiUseVictor4));
     new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon5));
+  }
+
+  public void exportShuffleBoardData() {
+    if (Constants.debugMode) {
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(chassis);
+
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
+    }
   }
 
   /**
