@@ -51,15 +51,15 @@ public final class Constants {
     public final static int MOD_ONE_DRIVE = 7;
 
     // back right
-    public final static int MOD_TWO_STEER = 8;
-    public final static int MOD_TWO_DRIVE = 9;
+    public final static int MOD_TWO_STEER = 9;
+    public final static int MOD_TWO_DRIVE = 8;
 
     // back left
-    public final static int MOD_THREE_STEER = 10;
-    public final static int MOD_THREE_DRIVE = 11;
+    public final static int MOD_THREE_STEER = 11;
+    public final static int MOD_THREE_DRIVE = 10;
 
-    public final static int MOD_FOUR_STEER = 12;
-    public final static int MOD_FOUR_DRIVE = 13;
+    public final static int MOD_FOUR_STEER = 13;
+    public final static int MOD_FOUR_DRIVE = 12;
     // front left
     public final static int MOD_ONE_CANCODER = 1;
     public final static int MOD_TWO_CANCODER = 2;
@@ -124,10 +124,10 @@ public final class Constants {
   }
 
   public static class SwerveEncoderOffsets {
-    public static final double MOD_ONE_OFFSET = 0;
-    public static final double MOD_TWO_OFFSET = 0;
-    public static final double MOD_THREE_OFFSET = 0;
-    public static final double MOD_FOUR_OFFSET = 0;
+    public static final double MOD_ONE_OFFSET = 0.111084;
+    public static final double MOD_TWO_OFFSET = 0.068604;
+    public static final double MOD_THREE_OFFSET = -0.378174;
+    public static final double MOD_FOUR_OFFSET = 0.427979;
     public static final double[] kCANCoderOffsets = new double[] {MOD_ONE_OFFSET, MOD_TWO_OFFSET, MOD_THREE_OFFSET, MOD_FOUR_OFFSET};
   }
 
@@ -150,10 +150,10 @@ public final class Constants {
     public static final int BTN_TRIANGLE = 4;
     public static final int BTN_LBUMPER = 5;
     public static final int BTN_RBUMPER = 6;
-  
+
     public static final int BTN_LJOYSTICK_PRESS = 11;
     public static final int BTN_RJOYSTICK_PRESS = 12;
-  
+
     // Gamepad POV List
     public static final int POV_UNPRESSED = -1;
     public static final int POV_N = 0;
@@ -164,7 +164,7 @@ public final class Constants {
     public static final int POV_SW = 225;
     public static final int POV_W = 270;
     public static final int POV_NW = 315;
-  
+
     // Gamepad Axis List
     public static final int AXS_LJOYSTICKX = 0;
     public static final int AXS_LJOYSTICKY = 1;
@@ -172,22 +172,22 @@ public final class Constants {
     public static final int AXS_RTRIGGER = 4;
     public static final int AXS_RJOYSTICK_X = 2;
     public static final int AXS_RJOYSTICK_Y = 5;
-    }
-  
+  }
+
   public static class XBox {
     // Gamepad Button List
     public static final int BTN_A = 1;
     public static final int BTN_B = 2;
     public static final int BTN_X = 3;
     public static final int BTN_Y = 4;
-  
+
     public static final int BTN_LBUMPER = 5;
     public static final int BTN_RBUMPER = 6;
     public static final int BTN_WINDOW = 7;
     public static final int BTN_MENU = 8;
     public static final int BTN_LJOYSTICK_PRESS = 9;
     public static final int BTN_RJOYSTICK_PRESS = 10;
-  
+
     // Gamepad POV List
     public static final int POV_UNPRESSED = -1;
     public static final int POV_N = 0;
@@ -198,7 +198,7 @@ public final class Constants {
     public static final int POV_SW = 225;
     public static final int POV_W = 270;
     public static final int POV_NW = 315;
-  
+
     // Gamepad Axis List
     public static final int AXS_LJOYSTICK_X = 0;
     public static final int AXS_LJOYSTICK_Y = 1;
