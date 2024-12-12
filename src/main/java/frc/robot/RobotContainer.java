@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Autos;
 import frc.robot.commands.RunTalon;
 import frc.robot.commands.RunVictor;
@@ -54,7 +55,10 @@ public class RobotContainer {
     multiUseTalon5 = new MultiUseTalon(Constants.CAN.Talon5);
 
     // Configure the trigger bindings
+
     configureBindings();
+
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
   }
 
   /**
@@ -67,13 +71,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverController, Constants.XBox.POV_N).whileTrue(new TeleopDrive(chassis));
-
-    new JoystickButton(driverController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon1));
-    new JoystickButton(driverController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon2));
-    new JoystickButton(driverController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon3));
-    new JoystickButton(driverController, Constants.XBox.BTN_Y).whileTrue(new RunVictor(multiUseVictor4));
-    new JoystickButton(driverController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon5));
+    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon1));
+    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon2));
+    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon3));
+    new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new RunVictor(multiUseVictor4));
+    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon5));
   }
 
   /**

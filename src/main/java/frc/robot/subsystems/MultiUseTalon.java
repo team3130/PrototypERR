@@ -4,32 +4,36 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import javax.naming.ldap.Control;
 
 public class MultiUseTalon extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
 
-  private final TalonFX talon1;
+  private final WPI_TalonFX talon1;
 
   public MultiUseTalon(int CANID) {
-    talon1 = new TalonFX(CANID);
+    talon1 = new WPI_TalonFX(CANID);
   }
 
   public void runAtSpeed(double speed) {
-    talon1.set(speed);
+    talon1.set(ControlMode.PercentOutput, speed);
   }
 
   public void stop() {
-    talon1.set(0);
+    talon1.set(ControlMode.PercentOutput, 0);
   }
 
   public double getPosition() {
-    return talon1.getRotorPosition().getValue();
+    return talon1.getSelectedSensorPosition();
   }
   public int getID() {
     return talon1.getDeviceID();

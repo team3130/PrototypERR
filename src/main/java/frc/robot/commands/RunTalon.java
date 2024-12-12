@@ -12,7 +12,7 @@ import frc.robot.subsystems.MultiUseTalon;
 public class RunTalon extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final MultiUseTalon talon;
-  private final double speed = 0;
+  private final double speed = 0.2;
 
   /**
    * Creates a new ExampleCommand.

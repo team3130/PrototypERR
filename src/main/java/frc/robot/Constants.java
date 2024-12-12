@@ -51,15 +51,15 @@ public final class Constants {
     public final static int MOD_ONE_DRIVE = 7;
 
     // back right
-    public final static int MOD_TWO_STEER = 8;
-    public final static int MOD_TWO_DRIVE = 9;
+    public final static int MOD_TWO_STEER = 9;
+    public final static int MOD_TWO_DRIVE = 8;
 
     // back left
-    public final static int MOD_THREE_STEER = 10;
-    public final static int MOD_THREE_DRIVE = 11;
+    public final static int MOD_THREE_STEER = 11;
+    public final static int MOD_THREE_DRIVE = 10;
 
-    public final static int MOD_FOUR_STEER = 12;
-    public final static int MOD_FOUR_DRIVE = 13;
+    public final static int MOD_FOUR_STEER = 13;
+    public final static int MOD_FOUR_DRIVE = 12;
     // front left
     public final static int MOD_ONE_CANCODER = 1;
     public final static int MOD_TWO_CANCODER = 2;
@@ -124,10 +124,10 @@ public final class Constants {
   }
 
   public static class SwerveEncoderOffsets {
-    public static final double MOD_ONE_OFFSET = 0;
-    public static final double MOD_TWO_OFFSET = 0;
-    public static final double MOD_THREE_OFFSET = 0;
-    public static final double MOD_FOUR_OFFSET = 0;
+    public static final double MOD_ONE_OFFSET = 0.111084;
+    public static final double MOD_TWO_OFFSET = 0.068604;
+    public static final double MOD_THREE_OFFSET = -0.378174;
+    public static final double MOD_FOUR_OFFSET = 0.427979;
     public static final double[] kCANCoderOffsets = new double[] {MOD_ONE_OFFSET, MOD_TWO_OFFSET, MOD_THREE_OFFSET, MOD_FOUR_OFFSET};
   }
 

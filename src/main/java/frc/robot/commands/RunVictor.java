@@ -12,7 +12,7 @@ import frc.robot.subsystems.MultiUseVictor;
 public class RunVictor extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final MultiUseVictor victor;
-  private final double speed = 0;
+  private final double speed = 0.2;
 
   /**
    * Creates a new ExampleCommand.

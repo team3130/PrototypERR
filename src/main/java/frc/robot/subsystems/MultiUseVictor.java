@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.motorcontrol.PWMVictorSPX;
@@ -17,18 +19,18 @@ public class MultiUseVictor extends SubsystemBase {
    * Creates a new ExampleSubsystem.
    */
 
-  private final PWMVictorSPX victor;
+  private final VictorSPX victor;
 
   public MultiUseVictor(int CANID) {
-    victor = new PWMVictorSPX(CANID);
+    victor = new VictorSPX(CANID);
   }
 
   public void runAtSpeed(double speed) {
-    victor.set(speed);
+    victor.set(ControlMode.PercentOutput, speed);
   }
 
   public void stop() {
-    victor.set(0);
+    victor.set(ControlMode.PercentOutput, 0);
   }
 
   @Override
