@@ -35,15 +35,6 @@ public class Chassis extends SubsystemBase {
 
         odometry = new SwerveDrivePoseEstimator(kinematics, rotation2d, getPositions(), pose2d);
     }
-    public Command exampleMethodCommand() {
-        // Inline construction of command goes here.
-        // Subsystem::RunOnce implicitly requires `this` subsystem.
-        return runOnce(
-                () -> {
-                    /* one-time action goes here */
-                });
-    }
-
     public SwerveModulePosition[] getPositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
         for(int i = 0; i <= 3; i++) {
@@ -51,12 +42,7 @@ public class Chassis extends SubsystemBase {
         }
         return positions;
     }
-
-
-    public boolean exampleCondition() {
-        // Query some boolean state, such as a digital sensor.
-        return false;
-    }
+    
 
     @Override
     public void periodic() {
