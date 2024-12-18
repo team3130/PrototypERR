@@ -42,7 +42,16 @@ public class Chassis extends SubsystemBase {
         }
         return positions;
     }
-    
+
+    public Pose2d getPose2d() {
+        return odometry.getEstimatedPosition();
+    }
+
+    public Rotation2d getRotation2d() {
+        return odometry.getEstimatedPosition().getRotation();
+    }
+
+
 
     @Override
     public void periodic() {
