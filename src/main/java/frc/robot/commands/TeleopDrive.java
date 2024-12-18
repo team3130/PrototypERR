@@ -17,9 +17,6 @@ import frc.robot.subsystems.ExampleSubsystem;
     private final Chassis chassis;
     private final PS5Controller controller;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private double y;
-    private double x;
-    private double theta;
     public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
       this.chassis = chassis;
       this.controller = PS5controller;
@@ -82,7 +79,7 @@ import frc.robot.subsystems.ExampleSubsystem;
       x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
       y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-      chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
+      chassis.teleopDrive(x, y, theta, chassis.getFieldRelative()); //uses either driving or targeting inputs for theta
     }
 
 

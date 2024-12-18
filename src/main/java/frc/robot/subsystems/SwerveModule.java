@@ -86,12 +86,19 @@ public class SwerveModule implements Sendable {
     // returns the position of the steering motor radians
     public Rotation2d getTurningPosition() {
         // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
-
-        return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.steerRotToRads);
+        if (side == 0 || side == 1) {
+            return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.frontSteerRotToRads);
+        } else {
+            return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.backSteerRotToRads);
+        }
     }
 
     public double getTurningPositionRadians() {
-        return steerMotor.getPosition().getValue() * Constants.SwerveConversions.steerRotToRads;
+        if (side == 0 || side == 1) {
+            return steerMotor.getPosition().getValue() * Constants.SwerveConversions.frontSteerRotToRads;
+        } else {
+            return steerMotor.getPosition().getValue() * Constants.SwerveConversions.backSteerRotToRads;
+        }
     }
 
     // gets the velocity of the drive motor in m/s
@@ -101,12 +108,16 @@ public class SwerveModule implements Sendable {
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.steerRotToRads * 10d;
+        if (side == 0 || side == 1) {
+            return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.frontSteerRotToRads * 10d;
+        } else {
+            return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.backSteerRotToRads * 10d;
+        }
     }
 
     // gets the position of the steering wheel according to the absolute encoders
-    public double getAbsoluteEncoderRads() {
-        return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);// / (Math.PI *2);
+    public double getAbsoluteEncoderRots() {
+        return absoluteEncoder.getAbsolutePosition().getValue();
     }
 
     public double getAbsoluteEncoderRotation() {
@@ -124,7 +135,11 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.SwerveConversions.steerRotToRads);
+        if (side == 0 || side == 1) {
+            steerMotor.setPosition((getAbsoluteEncoderRots() - absoluteEncoderOffset) * Constants.SwerveConversions.frontSteerGearRatio);
+        } else {
+            steerMotor.setPosition((getAbsoluteEncoderRots() - absoluteEncoderOffset) * Constants.SwerveConversions.backSteerGearRatio);
+        }
         //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
@@ -289,7 +304,7 @@ public class SwerveModule implements Sendable {
             // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-            builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
+            builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRots, null);
             builder.addDoubleProperty("Constant Steering voltage", this::getSwerveSteeringVoltage, this::setSwerveSteeringVoltage);
             builder.addDoubleProperty("Constant Driving voltage", this::getSwerveDrivingVoltage, this::getSwerveDrivingVoltage);
 
