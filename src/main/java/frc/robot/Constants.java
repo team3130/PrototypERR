@@ -133,15 +133,18 @@ public final class Constants {
 
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double driveGearRatio = 6.75; // Checked 12/18/24
+    public final static double frontDriveGearRatio = 5.9; // Checked 12/18/24
+    public final static double backDriveGearRatio = 6.75; //Checked 12/18/24
     public final static double frontSteerGearRatio = 18.75; // Checked 12/18/24
     public final static double backSteerGearRatio = 21.42857; // Checked 12/18/24
     public static final double wheelDiameter = Units.inchesToMeters(3.9);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
-    public final static double driveRotToMeters = wheelDiameter * Math.PI * (1/(driveGearRatio)); // multiply by
+    public final static double frontDriveRotToMeters = wheelDiameter * Math.PI * (1/(frontDriveGearRatio)); // multiply by
+    public final static double backDriveRotToMeters =  wheelDiameter * Math.PI * (1/backDriveGearRatio);
     public static final double frontSteerRotToRads = 1/(frontSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double backSteerRotToRads = 1/(backSteerGearRatio) * Math.PI * 2; //multiply by position
-    public static final double driveRotToMetersPerSecond = driveRotToMeters * 10; // multiply by velocity
+    public static final double frontDriveRotToMetersPerSecond = frontDriveRotToMeters * 10; // multiply by velocity
+    public static final double backDriveRotToMetersPerSecond = backDriveRotToMeters * 10; // multiply by velocity
     public static final double frontSteerRotToRadsPerSecond = frontSteerRotToRads * 10; // multiply by velocity
     public static final double backSteerRotToRadsPerSecond = backSteerRotToRads * 10; // multiply by velocity
   }

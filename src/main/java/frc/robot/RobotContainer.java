@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Autos;
+import frc.robot.commands.RotateTo90;
 import frc.robot.commands.RunTalon;
 import frc.robot.commands.RunVictor;
-import frc.robot.commands.TeleopDrive;
+import frc.robot.commands.chassis.ResetOdometryForward;
+import frc.robot.commands.chassis.TeleopDrive;
 import frc.robot.subsystems.Chassis;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -74,11 +76,14 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon1));
-    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon2));
-    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon3));
-    new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new RunVictor(multiUseVictor4));
-    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon5));
+    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
+    new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
+
+    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
+    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
+    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
+    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
+    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
   }
 
   public void exportShuffleBoardData() {

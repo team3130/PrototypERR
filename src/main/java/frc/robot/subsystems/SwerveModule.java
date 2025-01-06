@@ -79,8 +79,11 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        //return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
-        return driveMotor.getPosition().getValue() * Constants.SwerveConversions.driveRotToMeters;
+        if (side == 0 || side == 1) {
+            return driveMotor.getPosition().getValue() * Constants.SwerveConversions.frontDriveRotToMeters;
+        } else {
+            return driveMotor.getPosition().getValue() * Constants.SwerveConversions.backDriveRotToMeters;
+        }
     }
 
     // returns the position of the steering motor radians
@@ -103,7 +106,11 @@ public class SwerveModule implements Sendable {
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.driveRotToMeters * 10d;
+        if (side == 0 || side == 1) {
+            return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.frontDriveRotToMeters * 10d;
+        } else {
+            return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.backDriveRotToMeters * 10d;
+        }
     }
 
     // gets the speed at which the steering motor turns in radians per second

@@ -12,15 +12,15 @@ import frc.robot.subsystems.MultiUseTalon;
 public class RunTalon extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final MultiUseTalon talon;
-  private final double speed = 0.2;
-
+  private double speed = 0;
   /**
    * Creates a new ExampleCommand.
    *
    * @param talon The subsystem used by this command.
    */
-  public RunTalon(MultiUseTalon talon) {
+  public RunTalon(MultiUseTalon talon, double speed) {
     this.talon = talon;
+    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(talon);
   }

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -79,7 +79,7 @@ import frc.robot.subsystems.ExampleSubsystem;
       x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
       y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-      chassis.teleopDrive(x, y, theta, chassis.getFieldRelative()); //uses either driving or targeting inputs for theta
+      chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
     }
 
 
