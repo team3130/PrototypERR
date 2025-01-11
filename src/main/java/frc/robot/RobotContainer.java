@@ -10,19 +10,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Autos;
-import frc.robot.commands.RotateTo90;
-import frc.robot.commands.RunTalon;
-import frc.robot.commands.RunVictor;
+import frc.robot.commands.*;
 import frc.robot.commands.chassis.ResetOdometryForward;
 import frc.robot.commands.chassis.TeleopDrive;
-import frc.robot.subsystems.Chassis;
+import frc.robot.sensors.JoystickTrigger;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.MultiUseTalon;
-import frc.robot.subsystems.MultiUseVictor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,6 +36,7 @@ public class RobotContainer {
   public final MultiUseTalon multiUseTalon3;
   public final MultiUseVictor multiUseVictor4;
   public final MultiUseTalon multiUseTalon5;
+  public final MultiUseFalcon falcon;
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -57,6 +53,7 @@ public class RobotContainer {
     multiUseTalon3 = new MultiUseTalon(Constants.CAN.Talon3);
     multiUseVictor4 = new MultiUseVictor(Constants.CAN.Victor4);
     multiUseTalon5 = new MultiUseTalon(Constants.CAN.Talon5);
+    falcon = new MultiUseFalcon();
 
     // Configure the trigger bindings
     configureBindings();
@@ -79,17 +76,20 @@ public class RobotContainer {
     new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
     new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
 
-    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
-    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
-    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
-    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
-    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
+    //new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
+    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
+    //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
+    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
+    //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunFalcon(falcon, -0.5));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunFalcon(falcon, 0.5));
   }
 
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
+      //tab.add(new RunFalcon(multiUseFalcon, 0.2));
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }

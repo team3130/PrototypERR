@@ -28,6 +28,7 @@ public final class Constants {
     public static final int Talon3 = 3;
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
+    public static final int Falcon = 14;
   }
 
   public static class Swerve {
@@ -180,7 +181,7 @@ public final class Constants {
     public static final int AXS_RJOYSTICK_Y = 5;
     }
   
-  public static class XBox {
+  public static class Xbox {
     // Gamepad Button List
     public static final int BTN_A = 1;
     public static final int BTN_B = 2;

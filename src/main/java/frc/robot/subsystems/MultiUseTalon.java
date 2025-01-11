@@ -5,7 +5,8 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.configs.CANcoderConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,10 +19,10 @@ public class MultiUseTalon extends SubsystemBase {
    * Creates a new ExampleSubsystem.
    */
 
-  private final WPI_TalonFX talon1;
+  private final TalonSRX talon1;
 
   public MultiUseTalon(int CANID) {
-    talon1 = new WPI_TalonFX(CANID);
+    talon1 = new TalonSRX(CANID);
   }
 
   public void runAtSpeed(double speed) {
@@ -32,9 +33,7 @@ public class MultiUseTalon extends SubsystemBase {
     talon1.set(ControlMode.PercentOutput, 0);
   }
 
-  public double getPosition() {
-    return talon1.getSelectedSensorPosition();
-  }
+  //public double getPosition() {return talon1.getPosition().getValue();}
   public int getID() {
     return talon1.getDeviceID();
   }
@@ -43,7 +42,7 @@ public class MultiUseTalon extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Talon " + (getID()));
-      builder.addDoubleProperty("Encoder Position", this::getPosition, null);
+      //builder.addDoubleProperty("Encoder Position", this::getPosition, null);
     }
   }
 

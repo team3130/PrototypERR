@@ -42,6 +42,7 @@ import frc.robot.subsystems.ExampleSubsystem;
      */
     @Override
     public void execute() {
+      chassis.updateOdometryFromSwerve();
       // stack time (local var) > heap (instance var)
       double theta = 0d;
       double x = 0d;
