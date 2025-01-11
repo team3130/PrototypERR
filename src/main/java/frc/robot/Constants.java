@@ -157,10 +157,10 @@ public final class Constants {
     public static final int BTN_TRIANGLE = 4;
     public static final int BTN_LBUMPER = 5;
     public static final int BTN_RBUMPER = 6;
-  
+
     public static final int BTN_LJOYSTICK_PRESS = 11;
     public static final int BTN_RJOYSTICK_PRESS = 12;
-  
+
     // Gamepad POV List
     public static final int POV_UNPRESSED = -1;
     public static final int POV_N = 0;
@@ -171,7 +171,7 @@ public final class Constants {
     public static final int POV_SW = 225;
     public static final int POV_W = 270;
     public static final int POV_NW = 315;
-  
+
     // Gamepad Axis List
     public static final int AXS_LJOYSTICKX = 0;
     public static final int AXS_LJOYSTICKY = 1;
@@ -187,14 +187,14 @@ public final class Constants {
     public static final int BTN_B = 2;
     public static final int BTN_X = 3;
     public static final int BTN_Y = 4;
-  
+
     public static final int BTN_LBUMPER = 5;
     public static final int BTN_RBUMPER = 6;
     public static final int BTN_WINDOW = 7;
     public static final int BTN_MENU = 8;
     public static final int BTN_LJOYSTICK_PRESS = 9;
     public static final int BTN_RJOYSTICK_PRESS = 10;
-  
+
     // Gamepad POV List
     public static final int POV_UNPRESSED = -1;
     public static final int POV_N = 0;
@@ -205,7 +205,7 @@ public final class Constants {
     public static final int POV_SW = 225;
     public static final int POV_W = 270;
     public static final int POV_NW = 315;
-  
+
     // Gamepad Axis List
     public static final int AXS_LJOYSTICK_X = 0;
     public static final int AXS_LJOYSTICK_Y = 1;
