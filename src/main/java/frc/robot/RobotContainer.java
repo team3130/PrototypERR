@@ -33,12 +33,12 @@ public class RobotContainer {
   public final Chassis chassis;
 
   //Mechanism Motors
-  public final MultiUseTalon multiUseTalon1;
-  public final MultiUseTalon multiUseTalon2;
-  public final MultiUseTalon multiUseTalon3;
+  public final MultiUseTalonSRX multiUseTalon1;
+  public final MultiUseTalonSRX multiUseTalon2;
+  public final MultiUseTalonSRX multiUseTalon3;
   public final MultiUseVictor multiUseVictor4;
-  public final MultiUseTalon multiUseTalon5;
-  public final MultiUseFalcon falcon;
+  public final MultiUseTalonSRX multiUseTalon5;
+  public final MultiUseTalonFX falcon;
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -50,12 +50,12 @@ public class RobotContainer {
     m_exampleSubsystem = new ExampleSubsystem();
 
     chassis = new Chassis();
-    multiUseTalon1 = new MultiUseTalon(Constants.CAN.Talon1);
-    multiUseTalon2 = new MultiUseTalon(Constants.CAN.Talon2);
-    multiUseTalon3 = new MultiUseTalon(Constants.CAN.Talon3);
+    multiUseTalon1 = new MultiUseTalonSRX(Constants.CAN.Talon1);
+    multiUseTalon2 = new MultiUseTalonSRX(Constants.CAN.Talon2);
+    multiUseTalon3 = new MultiUseTalonSRX(Constants.CAN.Talon3);
     multiUseVictor4 = new MultiUseVictor(Constants.CAN.Victor4);
-    multiUseTalon5 = new MultiUseTalon(Constants.CAN.Talon5);
-    falcon = new MultiUseFalcon();
+    multiUseTalon5 = new MultiUseTalonSRX(Constants.CAN.Talon5);
+    falcon = new MultiUseTalonFX();
 
     // Configure the trigger bindings
     configureBindings();

@@ -5,20 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.MultiUseTalon;
+import frc.robot.subsystems.MultiUseTalonSRX;
 
 /** An example command that uses an example subsystem. */
-public class RunTalon extends Command {
+public class RunTalonSRX extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final MultiUseTalon talon;
+  private final MultiUseTalonSRX talon;
   private double speed = 0;
   /**
    * Creates a new ExampleCommand.
    *
    * @param talon The subsystem used by this command.
    */
-  public RunTalon(MultiUseTalon talon, double speed) {
+  public RunTalonSRX(MultiUseTalonSRX talon, double speed) {
     this.talon = talon;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
