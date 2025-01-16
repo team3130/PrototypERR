@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -12,7 +13,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -37,7 +37,8 @@ public class Chassis extends SubsystemBase {
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
-    private final Navx navx = Navx.GetInstance(); // initialize Navx
+    private final Navx navx = Navx.GetInstance(); // initialize navx
+    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pidgeon); // initialize pigeon
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
@@ -157,9 +158,11 @@ public class Chassis extends SubsystemBase {
     }
 
     // Zeros the Navx's heading
-    public void zeroHeading(){
-        Navx.resetNavX();
-    }
+    //public void zeroHeading(){Navx.resetNavX();}
+
+    // Zeros the pidegon's heading
+    public void zeroHeading() {
+        pigeon.reset();}
 
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
@@ -173,14 +176,15 @@ public class Chassis extends SubsystemBase {
 
     // periodic call to update odometry from encoders
     public void updateOdometryFromSwerve() {
-        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+        odometry.updateWithTime(Timer.getFPGATimestamp(), pigeon.getRotation2d(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
     // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        Navx.resetNavX();
+        pigeon.reset();
+        pigeon.
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 

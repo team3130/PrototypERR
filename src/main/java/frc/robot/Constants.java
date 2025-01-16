@@ -20,6 +20,7 @@ public final class Constants {
   public static final boolean pitMode = false;
 
   public static class CAN {
+    public static final int Pidgeon = -1;
     public static final int PCM = 0;
     public static final int PDP = 1;
 
