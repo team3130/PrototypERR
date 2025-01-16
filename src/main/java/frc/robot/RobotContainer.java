@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -81,8 +83,8 @@ public class RobotContainer {
     //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunFalcon(falcon, -0.5));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunFalcon(falcon, 0.5));
+    new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunFalcon(falcon, -0.5));
+    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunFalcon(falcon, 0.5));
   }
 
   public void exportShuffleBoardData() {
@@ -93,6 +95,10 @@ public class RobotContainer {
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
+  }
+
+  public void resetOdometryForward() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
 
   /**

@@ -17,7 +17,6 @@ public class MultiUseFalcon extends SubsystemBase {
   }
 
   public void runAtSpeed(double speed) {
-    System.out.println("method running");
     talon.set(speed);
   }
   public void stop() {
