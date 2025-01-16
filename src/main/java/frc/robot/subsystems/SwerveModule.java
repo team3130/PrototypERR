@@ -5,6 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -26,6 +27,8 @@ public class SwerveModule implements Sendable {
     private final int side; // the side that the bot is on
     final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
+    final TalonFXConfiguration steerTalonConfig = new TalonFXConfiguration();
+    final TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
@@ -42,13 +45,15 @@ public class SwerveModule implements Sendable {
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
         turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
 
-        steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
+        steerTalonConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive); //set config to clockwise
+        steerMotor.getConfigurator().apply(steerTalonConfig); // config factory default
         steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
-        steerMotor.setInverted(true);
+        //steerMotor.setInverted(true);
 
+        driveTalonConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive); //set config to counter-clockwise
         driveMotor.getConfigurator().apply(new TalonFXConfiguration());
         driveMotor.setNeutralMode(NeutralModeValue.Brake);
-        driveMotor.setInverted(false);
+        //driveMotor.setInverted(false);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
@@ -57,16 +62,16 @@ public class SwerveModule implements Sendable {
         this.side =side;
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0.01);
+                withSupplyCurrentLimit(40).withSupplyCurrentLowerTime(0)), 0.01);
 
         steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0.01);
+                withSupplyCurrentLimit(20).withSupplyCurrentLowerTime(0)), 0.01);
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
-                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0.01);
+                withStatorCurrentLimit(40).withSupplyCurrentLowerTime(0)), 0.01);
 
         steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
-                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0.01);
+                withStatorCurrentLimit(20).withSupplyCurrentLowerTime(0)), 0.01);
 
 
         resetEncoders();
@@ -80,9 +85,9 @@ public class SwerveModule implements Sendable {
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
         if (side == 0 || side == 1) {
-            return driveMotor.getPosition().getValue() * Constants.SwerveConversions.frontDriveRotToMeters;
+            return driveMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.frontDriveRotToMeters;
         } else {
-            return driveMotor.getPosition().getValue() * Constants.SwerveConversions.backDriveRotToMeters;
+            return driveMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.backDriveRotToMeters;
         }
     }
 
@@ -90,45 +95,45 @@ public class SwerveModule implements Sendable {
     public Rotation2d getTurningPosition() {
         // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
         if (side == 0 || side == 1) {
-            return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.frontSteerRotToRads);
+            return new Rotation2d(steerMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.frontSteerRotToRads);
         } else {
-            return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.backSteerRotToRads);
+            return new Rotation2d(steerMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.backSteerRotToRads);
         }
     }
 
     public double getTurningPositionRadians() {
         if (side == 0 || side == 1) {
-            return steerMotor.getPosition().getValue() * Constants.SwerveConversions.frontSteerRotToRads;
+            return steerMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.frontSteerRotToRads;
         } else {
-            return steerMotor.getPosition().getValue() * Constants.SwerveConversions.backSteerRotToRads;
+            return steerMotor.getPosition().getValueAsDouble() * Constants.SwerveConversions.backSteerRotToRads;
         }
     }
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
         if (side == 0 || side == 1) {
-            return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.frontDriveRotToMeters * 10d;
+            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.frontDriveRotToMeters * 10d;
         } else {
-            return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.backDriveRotToMeters * 10d;
+            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.backDriveRotToMeters * 10d;
         }
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
         if (side == 0 || side == 1) {
-            return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.frontSteerRotToRads * 10d;
+            return steerMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.frontSteerRotToRads * 10d;
         } else {
-            return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.backSteerRotToRads * 10d;
+            return steerMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.backSteerRotToRads * 10d;
         }
     }
 
     // gets the position of the steering wheel according to the absolute encoders
     public double getAbsoluteEncoderRots() {
-        return absoluteEncoder.getAbsolutePosition().getValue();
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
     }
 
     public double getAbsoluteEncoderRotation() {
-        return absoluteEncoder.getAbsolutePosition().getValue();
+        return absoluteEncoder.getAbsolutePosition().getValueAsDouble();
     }
 
     public void updatePValue(double p) {
@@ -189,7 +194,7 @@ public class SwerveModule implements Sendable {
         }
 
         // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
+        state.optimize(getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         driveMotor.setVoltage(Constants.Swerve.maxDriveVoltage * (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond));
@@ -205,7 +210,7 @@ public class SwerveModule implements Sendable {
         }
 
         // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
+        state.optimize(getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
@@ -280,7 +285,7 @@ public class SwerveModule implements Sendable {
         return real;
     }
     public double getSteerRotations(){
-        return steerMotor.getPosition().getValue();
+        return steerMotor.getPosition().getValueAsDouble();
     }
 
 
@@ -297,8 +302,8 @@ public class SwerveModule implements Sendable {
         Constants.Swerve.maxDriveVoltage = lol;
     }
 
-    public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValue();}
-    public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValue();}
+    public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValueAsDouble();}
+    public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValueAsDouble();}
 
     /**
      * Builds the sendable for shuffleboard
