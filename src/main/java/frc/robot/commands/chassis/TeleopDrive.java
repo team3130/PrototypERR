@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 
    /** A default command to drive in teleop based off the joysticks*/
   public class TeleopDrive extends Command {
@@ -22,7 +21,7 @@ import frc.robot.subsystems.ExampleSubsystem;
       this.controller = PS5controller;
 
       // Use addRequirements() here to declare subsystem dependencies.
-      m_requirements.add(chassis);
+      addRequirements(chassis);
 
       xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
       yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);

@@ -169,6 +169,8 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
+networktables.json
+simgui.json
 *-window.json
 
 # Simulation data log directory
@@ -177,43 +179,9 @@ logs/
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
 
-### Team ERROR 3130 additions ###
-# CMake
-cmake-build-*/
+# clangd
+/.cache
+compile_commands.json
 
-
-# File-based project format
-*.iws
-
-
-# IntelliJ
-out/
-.idea/
-*.iml
-
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-fabric.properties
-
-
-.vscode/settings.json
-
-
-simgui-ds.json
-
-
-simgui-window.json
-
-
-simgui.json
-
-
-.SysId/
-
+# Eclipse generated file for annotation processors
+.factorypath

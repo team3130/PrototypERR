@@ -4,16 +4,13 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.MultiUseFalcon;
+import frc.robot.subsystems.MultiUseTalonFX;
 
 /** An example command that uses an example subsystem. */
-public class RunFalcon extends Command {
+public class RunTalonFX extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final MultiUseFalcon falcon;
+  private final MultiUseTalonFX falcon;
   private double speed;
 
   /**
@@ -21,7 +18,7 @@ public class RunFalcon extends Command {
    *
    * @param falcon The subsystem used by this command.
    */
-  public RunFalcon(MultiUseFalcon falcon, double speed) {
+  public RunTalonFX(MultiUseTalonFX falcon, double speed) {
     this.falcon = falcon;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.

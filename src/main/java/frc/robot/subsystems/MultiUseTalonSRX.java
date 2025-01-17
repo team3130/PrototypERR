@@ -6,22 +6,18 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.configs.CANcoderConfigurator;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import javax.naming.ldap.Control;
-
-public class MultiUseTalon extends SubsystemBase {
+public class MultiUseTalonSRX extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
 
   private final TalonSRX talon1;
 
-  public MultiUseTalon(int CANID) {
+  public MultiUseTalonSRX(int CANID) {
     talon1 = new TalonSRX(CANID);
   }
 

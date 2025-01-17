@@ -6,9 +6,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.ModuleConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -34,11 +36,11 @@ import java.util.Arrays;
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
+    private RobotConfig config;
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
-    private final Navx navx = Navx.GetInstance(); // initialize navx
-    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pidgeon); // initialize pigeon
+    private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
@@ -91,28 +93,33 @@ public class Chassis extends SubsystemBase {
         targetController.enableContinuousInput(-Math.PI, Math.PI);
         targetController.setTolerance(Math.toRadians(1.0));
 
-
-        AutoBuilder.configureHolonomic(
-                this::getPose2d, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveAutonRobotRelative,
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(0, 0, 0), // Translation PID constants
-                        new PIDConstants(0, 0, 0), // Rotation PID constants
-                        1.2, // Max module speed, in m/s
-                        0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                ),
-                () -> {
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
+        try{
+            config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+            // Handle exception as needed
+            e.printStackTrace();
+        }
+        if(config !=  null) {
+            AutoBuilder.configure(
+                    this::getPose2d, // Robot pose supplier
+                    this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                    this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                    this::driveAutonRobotRelative,
+                    new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                            new PIDConstants(0, 0, 0), // Translation PID constants
+                            new PIDConstants(0, 0, 0) // Rotation PID constants
+                    ),
+                    config, //the robot configuration
+                    () -> {
+                        var alliance = DriverStation.getAlliance();
+                        if (alliance.isPresent()) {
+                            return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                    },
+                    this // Reference to this subsystem to set requirements
+            );
+        }
     }
 
 
