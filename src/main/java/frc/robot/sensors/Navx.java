@@ -32,8 +32,10 @@ public class Navx {
     }
 
     public static void resetNavX(){
-        navX.reset();
-        navX.zeroYaw();
+        if(navXPresent) {
+            navX.reset();
+            navX.zeroYaw();
+        }
     }
 
     /**

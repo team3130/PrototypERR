@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -16,6 +17,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -33,7 +35,7 @@ import java.util.Arrays;
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
-    private RobotConfig config = null;
+    private RobotConfig config;
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
@@ -95,25 +97,27 @@ public class Chassis extends SubsystemBase {
             // Handle exception as needed
             e.printStackTrace();
         }
-        AutoBuilder.configure(
-                this::getPose2d, // Robot pose supplier
-                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveAutonRobotRelative,
-                new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(0, 0, 0), // Translation PID constants
-                        new PIDConstants(0, 0, 0) // Rotation PID constants
-                ),
-                config, //the robot configuration
-                () -> {
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
-                this // Reference to this subsystem to set requirements
-        );
+        if(config !=  null) {
+            AutoBuilder.configure(
+                    this::getPose2d, // Robot pose supplier
+                    this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                    this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                    this::driveAutonRobotRelative,
+                    new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                            new PIDConstants(0, 0, 0), // Translation PID constants
+                            new PIDConstants(0, 0, 0) // Rotation PID constants
+                    ),
+                    config, //the robot configuration
+                    () -> {
+                        var alliance = DriverStation.getAlliance();
+                        if (alliance.isPresent()) {
+                            return alliance.get() == DriverStation.Alliance.Red;
+                        }
+                        return false;
+                    },
+                    this // Reference to this subsystem to set requirements
+            );
+        }
     }
 
 
