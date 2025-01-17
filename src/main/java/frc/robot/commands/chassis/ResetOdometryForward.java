@@ -13,10 +13,10 @@ import frc.robot.subsystems.Chassis;
  * A command to automatically zero all odometry.
  */
 public class ResetOdometryForward extends InstantCommand {
-  private final Chassis m_chassis;
+  private final Chassis chassis;
 
   public ResetOdometryForward(Chassis subsystem) {
-    m_chassis = subsystem;
+    chassis = subsystem;
     addRequirements(subsystem);
   }
 
@@ -27,7 +27,7 @@ public class ResetOdometryForward extends InstantCommand {
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
       m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))));
     } else { */
-    m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
 
   }
 }

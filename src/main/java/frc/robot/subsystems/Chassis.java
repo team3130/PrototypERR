@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -18,7 +17,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -41,6 +39,7 @@ public class Chassis extends SubsystemBase {
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
+    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pigeon);
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
@@ -169,7 +168,8 @@ public class Chassis extends SubsystemBase {
 
     // Zeros the pidegon's heading
     public void zeroHeading() {
-        pigeon.reset();}
+        pigeon.reset();
+    }
 
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
@@ -190,9 +190,7 @@ public class Chassis extends SubsystemBase {
     // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        pigeon.reset();
-        pigeon.
-        odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
+        odometry.resetPosition(pigeon.getRotation2d(), generatePoses(), pose);
     }
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
@@ -335,8 +333,15 @@ public class Chassis extends SubsystemBase {
     }
 
     // returns the heading the NavX is reading, returning the rotation of the robot in radians
+    /*
     public double getHeading() {
         return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
+    }
+     */
+
+    // returns the heading the Pigeon is reading, returning the rotation of the robot in radians
+    public double getHeading() {
+        return Math.toRadians(Math.IEEEremainder(pigeon.getYaw().getValueAsDouble(), 360));
     }
 
     public double getTargetP() { return targetP; }
@@ -379,7 +384,8 @@ public class Chassis extends SubsystemBase {
             builder.setSmartDashboardType("Chassis");
 
             builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
-            builder.addDoubleProperty("Navx", this::getHeading, null);
+            //builder.addDoubleProperty("Navx", this::getHeading, null);
+            builder.addDoubleProperty("Pigeon", this::getHeading, null);
             builder.addDoubleProperty("X position", this::getX, null);
             builder.addDoubleProperty("Y position", this::getY, null);
             builder.addDoubleProperty("rotation", this::getYaw, null);
@@ -405,8 +411,15 @@ public class Chassis extends SubsystemBase {
     }
 
     // method to reset the robot's odometry to the supplied pose
+    /*
     public void resetPose(Pose2d newPose) {
         odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+    }
+     */
+
+    // method to reset the robot's odometry to the supplied pose
+    public void resetPose(Pose2d newPose) {
+        odometry.resetPosition(pigeon.getRotation2d(), generatePoses(), newPose);
     }
 
     // ChassisSpeeds supplier in robot relative
