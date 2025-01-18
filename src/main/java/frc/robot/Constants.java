@@ -31,6 +31,11 @@ public final class Constants {
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
     public static final int Falcon = 14;
+    public static final int climberMotor = ?;
+  }
+
+  public static class IDs{
+    public static final int climberLimit = ?;
   }
 
   public static class Swerve {
