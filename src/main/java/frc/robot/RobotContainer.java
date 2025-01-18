@@ -4,19 +4,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
-import frc.robot.commands.chassis.ResetOdometryForward;
-import frc.robot.commands.chassis.RotateTo90;
-import frc.robot.commands.chassis.TeleopDrive;
-import frc.robot.subsystems.*;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -29,17 +22,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final ExampleSubsystem m_exampleSubsystem;
-  public final Chassis chassis;
-
-  //Mechanism Motors
-  public final MultiUseTalonSRX multiUseTalon1;
-  public final MultiUseTalonSRX multiUseTalon2;
-  public final MultiUseTalonSRX multiUseTalon3;
-  public final MultiUseVictor multiUseVictor4;
-  public final MultiUseTalonSRX multiUseTalon5;
-  public final MultiUseTalonFX falcon;
-
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final PS5Controller driverController = new PS5Controller(0);
@@ -47,22 +30,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    m_exampleSubsystem = new ExampleSubsystem();
-
-    chassis = new Chassis();
-    multiUseTalon1 = new MultiUseTalonSRX(Constants.CAN.Talon1);
-    multiUseTalon2 = new MultiUseTalonSRX(Constants.CAN.Talon2);
-    multiUseTalon3 = new MultiUseTalonSRX(Constants.CAN.Talon3);
-    multiUseVictor4 = new MultiUseVictor(Constants.CAN.Victor4);
-    multiUseTalon5 = new MultiUseTalonSRX(Constants.CAN.Talon5);
-    falcon = new MultiUseTalonFX();
-
     // Configure the trigger bindings
     configureBindings();
-    exportShuffleBoardData();
-
-    // Set Default commands
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
   }
 
   /**
@@ -75,30 +44,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
-    new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
-
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
-    new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunTalonFX(falcon, -0.5));
-    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunTalonFX(falcon, 0.5));
-  }
-
-  public void exportShuffleBoardData() {
-    if (Constants.debugMode) {
-      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
-      tab.add(chassis);
-      //tab.add(new RunFalcon(multiUseFalcon, 0.2));
-
-      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
-    }
-  }
-
-  public void resetOdometryForward() {
-    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
