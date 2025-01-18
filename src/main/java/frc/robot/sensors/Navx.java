@@ -3,7 +3,6 @@ package frc.robot.sensors;
 import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
@@ -11,7 +10,6 @@ public class Navx {
     private static Navx pInstance;
     private static AHRS navX;
     private static boolean navXPresent;
-    private double angle = 0d;
 
     // TODO: private static double zeroPitch = Constants.Balance.defaultPitchZero;
 
@@ -34,8 +32,10 @@ public class Navx {
     }
 
     public static void resetNavX(){
-        navX.reset();
-        navX.zeroYaw();
+        if(navXPresent) {
+            navX.reset();
+            navX.zeroYaw();
+        }
     }
 
     /**

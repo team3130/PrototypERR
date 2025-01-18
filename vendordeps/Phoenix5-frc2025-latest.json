@@ -1,5 +1,9 @@
 {
+<<<<<<<< HEAD:vendordeps/Phoenix5-frc2025-latest.json
     "fileName": "Phoenix5-frc2025-latest.json",
+========
+    "fileName": "Phoenix5-5.35.1.json",
+>>>>>>>> 45d95b876c0e20423412300b8192e0fe1dac2a09:vendordeps/Phoenix5-5.35.1.json
     "name": "CTRE-Phoenix (v5)",
     "version": "5.35.1",
     "frcYear": "2025",

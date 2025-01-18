@@ -16,7 +16,7 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
   public static final boolean pitMode = false;
 
   public static class CAN {
@@ -28,6 +28,7 @@ public final class Constants {
     public static final int Talon3 = 3;
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
+    public static final int Falcon = 14;
   }
 
   public static class Swerve {
@@ -78,10 +79,10 @@ public final class Constants {
     public static final double wheelBase = 0.629;
 
     public static final Translation2d[] moduleTranslations = {
-            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0), // 1 pos neg
+            new Translation2d(wheelBase / 2.0, trackWidth / 2.0), // 1 pos neg
+            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
+            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
     // / 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
@@ -91,29 +92,29 @@ public final class Constants {
     public final static double kMaxAccelerationDrive = 1.25;
     public final static double kMaxAccelerationAngularDrive = 1.0*Math.PI;
 
-    public final static double kP_FrontRight = 0;
-    public final static double kI_FrontRight = 0;
-    public final static double kD_FrontRight = 0;
-    public final static double kF_FrontRight = 0;
-
-    public final static double kP_FrontLeft = 0;
+    public final static double kP_FrontLeft = 1;
     public final static double kI_FrontLeft = 0;
     public final static double kD_FrontLeft = 0;
     public final static double kF_FrontLeft = 0;
 
-    public final static double kP_BackLeft = 0;
-    public final static double kI_BackLeft = 0;
-    public final static double kD_BackLeft = 0;
-    public final static double kF_BackLeft = 0;
+    public final static double kP_FrontRight = 1;
+    public final static double kI_FrontRight = 0;
+    public final static double kD_FrontRight = 0;
+    public final static double kF_FrontRight = 0;
 
-    public final static double kP_BackRight = 0;
+    public final static double kP_BackRight = 1;
     public final static double kI_BackRight = 0;
     public final static double kD_BackRight = 0;
     public final static double kF_BackRight = 0;
-    public final static double[] kP_Swerve = new double[] {kP_FrontLeft, kP_BackLeft, kP_FrontRight, kP_BackRight};
-    public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
-    public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
-    public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
+
+    public final static double kP_BackLeft = 1;
+    public final static double kI_BackLeft = 0;
+    public final static double kD_BackLeft = 0;
+    public final static double kF_BackLeft = 0;
+    public final static double[] kP_Swerve = new double[] {kP_FrontLeft, kP_FrontRight, kP_BackRight, kP_BackLeft};
+    public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_FrontRight, kI_BackRight, kI_BackLeft};
+    public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_FrontRight, kD_BackRight, kD_BackLeft};
+    public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_FrontRight, kF_BackRight, kF_BackLeft};
   }
 
   public static class SwerveModules {
@@ -124,23 +125,29 @@ public final class Constants {
   }
 
   public static class SwerveEncoderOffsets {
-    public static final double MOD_ONE_OFFSET = 0.111084;
-    public static final double MOD_TWO_OFFSET = 0.068604;
-    public static final double MOD_THREE_OFFSET = -0.378174;
-    public static final double MOD_FOUR_OFFSET = 0.427979;
+    public static final double MOD_ONE_OFFSET = 0.110840;
+    public static final double MOD_TWO_OFFSET = 0.069580;
+    public static final double MOD_THREE_OFFSET = -0.378906;
+    public static final double MOD_FOUR_OFFSET = 0.425049;
     public static final double[] kCANCoderOffsets = new double[] {MOD_ONE_OFFSET, MOD_TWO_OFFSET, MOD_THREE_OFFSET, MOD_FOUR_OFFSET};
   }
 
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double driveGearRatio = 6.75; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double steerGearRatio = 21.42857; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public final static double frontDriveGearRatio = 5.9; // Checked 12/18/24
+    public final static double backDriveGearRatio = 6.75; //Checked 12/18/24
+    public final static double frontSteerGearRatio = 18.75; // Checked 12/18/24
+    public final static double backSteerGearRatio = 21.42857; // Checked 12/18/24
     public static final double wheelDiameter = Units.inchesToMeters(3.9);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
-    public final static double driveRotToMeters = wheelDiameter * Math.PI * (1/(driveGearRatio)); // multiply by
-    public static final double steerRotToRads = 1/(steerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double driveRotToMetersPerSecond = driveRotToMeters * 10; // multiply by velocity
-    public static final double steerRotToRadsPerSecond = steerRotToRads * 10; // multiply by velocity
+    public final static double frontDriveRotToMeters = wheelDiameter * Math.PI * (1/(frontDriveGearRatio)); // multiply by
+    public final static double backDriveRotToMeters =  wheelDiameter * Math.PI * (1/backDriveGearRatio);
+    public static final double frontSteerRotToRads = 1/(frontSteerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double backSteerRotToRads = 1/(backSteerGearRatio) * Math.PI * 2; //multiply by position
+    public static final double frontDriveRotToMetersPerSecond = frontDriveRotToMeters * 10; // multiply by velocity
+    public static final double backDriveRotToMetersPerSecond = backDriveRotToMeters * 10; // multiply by velocity
+    public static final double frontSteerRotToRadsPerSecond = frontSteerRotToRads * 10; // multiply by velocity
+    public static final double backSteerRotToRadsPerSecond = backSteerRotToRads * 10; // multiply by velocity
   }
 
   public static class PS5 {
@@ -172,9 +179,9 @@ public final class Constants {
     public static final int AXS_RTRIGGER = 4;
     public static final int AXS_RJOYSTICK_X = 2;
     public static final int AXS_RJOYSTICK_Y = 5;
-  }
-
-  public static class XBox {
+    }
+  
+  public static class Xbox {
     // Gamepad Button List
     public static final int BTN_A = 1;
     public static final int BTN_B = 2;
