@@ -7,7 +7,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Algae.AlgaeRetraction;
 import frc.robot.commands.Algae.AlgaeSpintake;
+import frc.robot.commands.Algae.AlgaeSpouttake;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.AlgaeIntake;
@@ -51,6 +53,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlgaeSpintake(algaeIntake));
+    new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AlgaeSpouttake(algaeIntake));
+    new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new AlgaeRetraction(algaeIntake));
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
