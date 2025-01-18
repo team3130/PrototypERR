@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Climber.Climb;
+import frc.robot.commands.Climber.UnClimb;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -23,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Climber climber;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final PS5Controller driverController = new PS5Controller(0);
@@ -32,6 +36,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+    climber = new Climber();
   }
 
   /**
@@ -47,6 +52,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new UnClimb(climber));
+    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new Climb(climber));
   }
 
   /**

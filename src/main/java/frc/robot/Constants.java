@@ -25,7 +25,7 @@ public final class Constants {
 
     public static final int Talon1 = 1;
     public static final int Talon2 = 2;
-    public static final int Talon3 = 3;
+    public static final int climber = 3;
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
   }
