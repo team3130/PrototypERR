@@ -1,6 +1,6 @@
 package frc.robot.sensors;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
@@ -18,7 +18,7 @@ public class Navx {
     private Navx() {
         try {
             //Connect to navX Gyro on MXP port.
-            navX = new AHRS(SPI.Port.kMXP);
+            navX = new AHRS(AHRS.NavXComType.kMXP_SPI);
             navXPresent = true;
         } catch (Exception ex) {
             //If connection fails log the error and fall back to encoder based angles.
