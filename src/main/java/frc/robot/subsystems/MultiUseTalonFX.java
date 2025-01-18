@@ -12,7 +12,7 @@ public class MultiUseTalonFX extends SubsystemBase {
   private final TalonFX talon;
   /** Creates a new ExampleSubsystem. */
   public MultiUseTalonFX() {
-    talon = new TalonFX(Constants.CAN.Falcon, "rio");
+    talon = new TalonFX(Constants.CAN.elevatorMotor, "rio");
   }
 
   public void runAtSpeed(double speed) {

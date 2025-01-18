@@ -30,7 +30,7 @@ public final class Constants {
     public static final int Talon3 = 3;
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
-    public static final int Falcon = 14;
+    public static final int elevatorMotor = 14;
   }
 
   public static class Swerve {

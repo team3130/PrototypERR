@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.Elevator.Elevate;
+import frc.robot.subsystems.Elevator;
 import frc.robot.commands.*;
 import frc.robot.commands.chassis.ResetOdometryForward;
 import frc.robot.commands.chassis.RotateTo90;
@@ -32,6 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final ExampleSubsystem m_exampleSubsystem;
   public final Chassis chassis;
+  public final Elevator elevator;
 
   //Mechanism Motors
   public final MultiUseTalonSRX multiUseTalon1;
@@ -50,6 +53,7 @@ public class RobotContainer {
   public RobotContainer() {
     m_exampleSubsystem = new ExampleSubsystem();
 
+    elevator = new Elevator();
     chassis = new Chassis();
     multiUseTalon1 = new MultiUseTalonSRX(Constants.CAN.Talon1);
     multiUseTalon2 = new MultiUseTalonSRX(Constants.CAN.Talon2);
@@ -61,7 +65,7 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     exportShuffleBoardData();
-
+    elevator.setDefaultCommand(new Elevate(elevator, operatorController));
     // Set Default commands
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
   }
