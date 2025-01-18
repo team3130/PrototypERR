@@ -39,7 +39,7 @@ public class Chassis extends SubsystemBase {
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
-    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pigeon);
+    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pigeon, "Cancun");
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position

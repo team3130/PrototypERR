@@ -20,17 +20,17 @@ public final class Constants {
   public static final boolean pitMode = false;
 
   public static class CAN {
-    public static final int Pigeon = 0;
+    public static final int Pigeon = 1;
 
-    public static final int PCM = 0;
-    public static final int PDP = 1;
+    public static final int PCM = 21;
+    public static final int PDP = 22;
 
-    public static final int Talon1 = 1;
-    public static final int Talon2 = 2;
-    public static final int Talon3 = 3;
-    public static final int Victor4 = 4;
-    public static final int Talon5 = 5;
-    public static final int Falcon = 14;
+    public static final int Talon1 = 14;
+    public static final int Talon2 = 15;
+    public static final int Talon3 = 16;
+    public static final int Victor4 = 17;
+    public static final int Talon5 = 18;
+    public static final int Falcon = 19;
   }
 
   public static class Swerve {
