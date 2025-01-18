@@ -7,8 +7,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Algae.AlgaeSpintake;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.AlgaeIntake;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,12 +27,14 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final AlgaeIntake algaeIntake;
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    algaeIntake = new AlgaeIntake();
     configureBindings();
   }
 
@@ -46,6 +50,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlgaeSpintake(algaeIntake));
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 

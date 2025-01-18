@@ -23,8 +23,8 @@ public final class Constants {
     public static final int PCM = 0;
     public static final int PDP = 1;
 
-    public static final int Talon1 = 1;
-    public static final int Talon2 = 2;
+    public static final int algaeExtensionMotor = 1;
+    public static final int algaeSpinMotor = 2;
     public static final int Talon3 = 3;
     public static final int Victor4 = 4;
     public static final int Talon5 = 5;
