@@ -31,6 +31,27 @@ public final class Constants {
     public static final int Victor4 = 17;
     public static final int Talon5 = 18;
     public static final int Falcon = 19;
+
+    public static final int ElevatorLeft = -1;
+    public static final int ElevatorRight = -1;
+
+    public static final int CoralIntake = -1;
+    public static final int CoralIntakePivot = -1;
+
+    public static final int AlgaeIntake = -1;
+    public static final int AlgaeIntakeActuation = -1;
+
+    public static final int Manipulator = -1;
+  }
+
+  public static class IDs {
+    public static final int ElevatorLimitSwitch = -1;
+    public static final int ElevatorEncoder = -1;
+
+    public static final int IntakeLimitSwitch = -1;
+
+    public static final int ManipulatorFirstBeam = -1;
+    public static final int ManipulatorSecondBeam = -1;
   }
 
   public static class Swerve {

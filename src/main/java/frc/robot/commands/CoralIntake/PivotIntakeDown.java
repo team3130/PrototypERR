@@ -2,32 +2,31 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.chassis;
+package frc.robot.commands.CoralIntake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.CoralIntake;
 
 /** An example command that uses an example subsystem. */
-public class RotateTo90 extends Command {
+public class PivotIntakeDown extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Chassis chassis;
+  private final CoralIntake coralIntake;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param chassis The subsystem used by this command.
+   * @param coralIntake The subsystem used by this command.
    */
-  public RotateTo90(Chassis chassis) {
-    this.chassis = chassis;
+  public PivotIntakeDown(CoralIntake coralIntake) {
+    this.coralIntake = coralIntake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(chassis);
+    addRequirements(coralIntake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.turnToAngle(Math.PI/2);
+    coralIntake.pivotDown();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,7 +35,9 @@ public class RotateTo90 extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    coralIntake.stopPivot();
+  }
 
   // Returns true when the command should end.
   @Override
