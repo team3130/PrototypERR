@@ -42,6 +42,8 @@ public final class Constants {
     public static final int AlgaeIntakeActuation = -1;
 
     public static final int Manipulator = -1;
+
+    public static final int Climber = -1;
   }
 
   public static class IDs {
@@ -52,6 +54,8 @@ public final class Constants {
 
     public static final int ManipulatorFirstBeam = -1;
     public static final int ManipulatorSecondBeam = -1;
+
+    public static final int ClimberLimitSwitch = -1;
   }
 
   public static class Swerve {
