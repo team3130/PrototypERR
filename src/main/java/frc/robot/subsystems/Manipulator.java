@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +26,33 @@ public class Manipulator extends SubsystemBase {
 
     manip.configFactoryDefault();
     manip.setInverted(false);
+  }
+
+  public void runManip() {
+    manip.set(ControlMode.PercentOutput, manipSpeed);
+  }
+  public void reverseManip() {
+    manip.set(ControlMode.PercentOutput, -manipSpeed);
+  }
+  public void stopManip() {
+    manip.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean getFirstBeam() {return firstBeam.get();}
+  public boolean getSecondBeam() {return secondBeam.get();}
+
+  public double getManipSpeed() {return manipSpeed;}
+  public void setManipSpeed(double value) {manipSpeed = value;}
+
+  public void initSendable(SendableBuilder builder) {
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Manipulator");
+
+      builder.addBooleanProperty("First Beam", this::getFirstBeam, null);
+      builder.addBooleanProperty("Second Beam", this::getSecondBeam, null);
+
+      builder.addDoubleProperty("Manipulator Speed", this::getManipSpeed, this::setManipSpeed);
+    }
   }
 
 

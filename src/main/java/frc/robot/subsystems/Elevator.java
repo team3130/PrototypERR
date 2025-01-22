@@ -44,6 +44,13 @@ public class Elevator extends SubsystemBase {
   private double slot1kD = 0;
 
   private boolean zeroed = false;
+  private boolean atHome = false;
+  private boolean atMinPosition = false;
+  private boolean atL1 = false;
+  private boolean atL2 = false;
+  private boolean atL3 = false;
+  private boolean atL4 = false;
+  private boolean atMaxPosition = false;
   public Elevator() {
     leftMotor = new TalonFX(Constants.CAN.ElevatorLeft);
     rightMotor = new TalonFX(Constants.CAN.ElevatorRight);
@@ -105,19 +112,44 @@ public class Elevator extends SubsystemBase {
       setPosition(0);
       setZeroed(true);
     }
+    setAtHome(true);
+    setAtL1(false);
+    setAtL2(false);
+    setAtL3(false);
+    setAtL4(false);
   }
 
   public void goToL1() {
     goToSetpoint(L1);
+    setAtHome(false);
+    setAtL1(true);
+    setAtL2(false);
+    setAtL3(false);
+    setAtL4(false);
   }
   public void goToL2() {
     goToSetpoint(L2);
+    setAtHome(false);
+    setAtL1(false);
+    setAtL2(true);
+    setAtL3(false);
+    setAtL4(false);
   }
   public void goToL3() {
     goToSetpoint(L3);
+    setAtHome(false);
+    setAtL1(false);
+    setAtL2(false);
+    setAtL3(true);
+    setAtL4(false);
   }
   public void goToL4() {
     goToSetpoint(L4);
+    setAtHome(false);
+    setAtL1(false);
+    setAtL2(false);
+    setAtL3(false);
+    setAtL4(true);
   }
 
   public double getPosition() {return encoder.getPosition().getValueAsDouble();}
@@ -126,7 +158,28 @@ public class Elevator extends SubsystemBase {
   public boolean brokeLimitSwitch() {return limitSwitch.get();}
 
   public boolean isZeroed() {return zeroed;}
+  public boolean isAtHome() {return atHome;}
+  public boolean isAtMinPosition() {return atMinPosition;}
+  public boolean isAtL1() {return atL1;}
+  public boolean isAtL2() {return atL2;}
+  public boolean isAtL3() {return atL3;}
+  public boolean isAtL4() {return atL4;}
+  public boolean isAtMaxPosition() {return atMaxPosition;}
   public void setZeroed(boolean value) {zeroed = value;}
+  public void setAtHome(boolean value) {
+    atHome = value;}
+  public void setAtMinPosition(boolean value) {
+    atMinPosition = value;}
+  public void setAtL1(boolean value) {
+    atL1 = value;}
+  public void setAtL2(boolean value) {
+    atL2 = value;}
+  public void setAtL3(boolean value) {
+    atL3 = value;}
+  public void setAtL4(boolean value) {
+    atL4 = value;}
+  public void setAtMaxPosition(boolean value) {
+    atMaxPosition = value;}
 
   public double getHome() {return home;}
   public double getMinPosition() {return minPosition;}
@@ -190,7 +243,14 @@ public class Elevator extends SubsystemBase {
       builder.addDoubleProperty("Slot 1 kD", this::getSlot1kD, this::setSlot1kD);
 
       builder.addBooleanProperty("Broke Limit", this::brokeLimitSwitch, null);
-      builder.addBooleanProperty("Is Zeroed", this::isZeroed, this::setZeroed);
+      builder.addBooleanProperty("At Zeroed", this::isZeroed, this::setZeroed);
+      builder.addBooleanProperty("At Home", this::isAtHome, this::setAtHome);
+      builder.addBooleanProperty("At Min Position", this::isAtMinPosition, this::setAtMinPosition);
+      builder.addBooleanProperty("At L1", this::isAtL1, this::setAtL1);
+      builder.addBooleanProperty("At L2", this::isAtL2, this::setAtL2);
+      builder.addBooleanProperty("At L3", this::isAtL3, this::setAtL3);
+      builder.addBooleanProperty("At L4", this::isAtL4, this::setAtL4);
+      builder.addBooleanProperty("At Max Position", this::isAtMaxPosition, this::setAtMaxPosition);
     }
   }
   @Override
