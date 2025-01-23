@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,28 +12,29 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public final TalonFX climberMotor;
-  public final DigitalInput climberLimitHome;
-  public final DigitalInput climberLimitExtended;
-  public final double climbSpeed = 5;
+  private final TalonFX climberMotor;
+  private final DigitalInput limitHome;
+  private final DigitalInput limitExtended;
+  private final double climbSpeed = 5;
 
   public Climber() {
     climberMotor = new TalonFX(Constants.CAN.climberMotor, "rio");
-    climberLimitHome = new DigitalInput(Constants.IDs.climberLimitHome);
-    climberLimitExtended = new DigitalInput(Constants.IDs.climberLimitExtended);
+    limitHome = new DigitalInput(Constants.IDs.climberLimitHome);
+    limitExtended = new DigitalInput(Constants.IDs.climberLimitExtended);
 
   }
-  public void stopClimbing() {
+  public void stopMoving() {
     climberMotor.set(0);
   }
-  public void startClimbing() {
+  public void extend() {
     climberMotor.set(climbSpeed);
   }
   public boolean isExteneded() {
-    return climberLimitExtended.get();
+    return limitExtended.get();
   }
+  public void goHome(){climberMotor.set(-climbSpeed);}
   public boolean isHome() {
-    return climberLimitHome.get();
+    return limitHome.get();
   }
   /**
    * Example command factory method.
