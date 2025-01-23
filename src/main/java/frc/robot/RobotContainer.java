@@ -40,7 +40,7 @@ public class RobotContainer {
   public final MultiUseVictor multiUseVictor4;
   public final MultiUseTalonSRX multiUseTalon5;
   public final MultiUseTalonFX falcon;
-
+  public final Manipulator talon;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final PS5Controller driverController = new PS5Controller(0);
@@ -57,6 +57,7 @@ public class RobotContainer {
     multiUseVictor4 = new MultiUseVictor(Constants.CAN.Victor4);
     multiUseTalon5 = new MultiUseTalonSRX(Constants.CAN.Talon5);
     falcon = new MultiUseTalonFX();
+    talon = new Manipulator();
 
     // Configure the trigger bindings
     configureBindings();
@@ -84,7 +85,7 @@ public class RobotContainer {
     //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunManipulator(talon, 0.4));
     new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunTalonFX(falcon, -0.5));
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunTalonFX(falcon, 0.5));
   }
