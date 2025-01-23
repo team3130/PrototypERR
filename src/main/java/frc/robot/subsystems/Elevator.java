@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -30,14 +31,14 @@ public class Elevator extends SubsystemBase {
   private double L4 = 0;
   private double maxPosition = 0;
 
-  private final MotionMagicVoltage voltRequest0;
+  private final MotionMagicDutyCycle voltRequest0;
   private Slot0Configs slot0Configs;
   private double slot0kG = 0;
   private double slot0kP = 0;
   private double slot0kI = 0;
   private double slot0kD = 0;
 
-  private final MotionMagicVoltage voltRequest1;
+  private final MotionMagicDutyCycle voltRequest1;
   private final Slot1Configs slot1Configs;
   private double slot1kG = 0;
   private double slot1kP = 0;
@@ -69,14 +70,14 @@ public class Elevator extends SubsystemBase {
     leftMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(6));
     rightMotor.getConfigurator().apply(new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).withSupplyCurrentLimit(6));
 
-    voltRequest0 = new MotionMagicVoltage(0);
+    voltRequest0 = new MotionMagicDutyCycle(0);
     slot0Configs = new Slot0Configs().withGravityType(GravityTypeValue.Elevator_Static);
     slot0Configs.kG = slot0kG;
     slot0Configs.kP = slot0kP;
     slot0Configs.kI = slot0kI;
     slot0Configs.kD = slot0kD;
 
-    voltRequest1 = new MotionMagicVoltage(0);
+    voltRequest1 = new MotionMagicDutyCycle(0);
     slot1Configs = new Slot1Configs().withGravityType(GravityTypeValue.Elevator_Static);
     slot1Configs.kG = slot1kG;
     slot1Configs.kP = slot1kP;

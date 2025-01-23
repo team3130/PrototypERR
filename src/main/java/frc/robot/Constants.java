@@ -55,7 +55,9 @@ public final class Constants {
     public static final int ManipulatorFirstBeam = -1;
     public static final int ManipulatorSecondBeam = -1;
 
-    public static final int ClimberLimitSwitch = -1;
+    public static final int ClimberLimitSwitchHome = -1;
+    public static final int ClimberLimitSwitchExtended = -1;
+
   }
 
   public static class Swerve {

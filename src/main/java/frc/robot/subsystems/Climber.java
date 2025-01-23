@@ -4,26 +4,22 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private final TalonFX climber;
-  private final DigitalInput limit;
-
+  private final DigitalInput homeLimit;
+  private final DigitalInput extendedLimit;
   private final MotionMagicVoltage voltRequest;
   private Slot0Configs slot0Configs;
   private double kG = 0;
@@ -39,7 +35,8 @@ public class Climber extends SubsystemBase {
   private boolean isZeroed = false;
   public Climber() {
     climber = new TalonFX(Constants.CAN.Climber);
-    limit = new DigitalInput(Constants.IDs.ClimberLimitSwitch);
+    homeLimit = new DigitalInput(Constants.IDs.ClimberLimitSwitchHome);
+    extendedLimit = new DigitalInput(Constants.IDs.ClimberLimitSwitchExtended);
 
     climber.getConfigurator().apply(new TalonFXConfiguration());
     climber.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
@@ -76,7 +73,8 @@ public class Climber extends SubsystemBase {
 
   public double getPosition() {return climber.getPosition().getValueAsDouble();}
 
-  public boolean brokeLimit() {return limit.get();}
+  public boolean brokeHomeLimit() {return homeLimit.get();}
+  public boolean brokeExtendedLimit() {return extendedLimit.get();}
 
   public double getClimberSpeed() {return climberSpeed;}
   public void setClimberSpeed(double value) {climberSpeed = value;}
@@ -103,7 +101,8 @@ public class Climber extends SubsystemBase {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Climber");
 
-      builder.addBooleanProperty("Broke Limit", this::brokeLimit, null);
+      builder.addBooleanProperty("Broke Home Limit", this::brokeHomeLimit, null);
+      builder.addBooleanProperty("Broke Extended Limit", this::brokeExtendedLimit, null);
       builder.addBooleanProperty("Is Zeroed", this::isZeroed, this::setZeroed);
 
       builder.addDoubleProperty("Position", this::getPosition, null);
