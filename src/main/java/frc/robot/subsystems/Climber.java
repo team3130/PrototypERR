@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
     climberMotor = new TalonFX(Constants.CAN.climberMotor, "rio");
     limitHome = new DigitalInput(Constants.IDs.climberLimitHome);
     limitExtended = new DigitalInput(Constants.IDs.climberLimitExtended);
-
+    climberMoter.configFactoryDefault();
   }
   public void stopMoving() {
     climberMotor.set(0);
