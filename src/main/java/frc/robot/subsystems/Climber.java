@@ -29,7 +29,7 @@ public class Climber extends SubsystemBase {
   public void extend() {
     climberMotor.set(climbSpeed);
   }
-  public boolean isExteneded() {
+  public boolean isExtended() {
     return limitExtended.get();
   }
   public void goHome(){climberMotor.set(-climbSpeed);}
