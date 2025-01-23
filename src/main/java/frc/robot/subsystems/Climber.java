@@ -14,12 +14,15 @@ import frc.robot.Constants;
 public class Climber extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public final TalonFX climberMotor;
-  public final DigitalInput climberLimit;
+  public final DigitalInput climberLimitHome;
+  public final DigitalInput climberLimitExtended;
   public final double climbSpeed = 5;
 
   public Climber() {
     climberMotor = new TalonFX(Constants.CAN.climberMotor, "rio");
-    climberLimit = new DigitalInput(Constants.IDs.climberLimit);
+    climberLimitHome = new DigitalInput(Constants.IDs.climberLimitHome);
+    climberLimitExtended = new DigitalInput(Constants.IDs.climberLimitExtended);
+
   }
   public void stopClimbing() {
     climberMotor.set(0);
@@ -27,8 +30,11 @@ public class Climber extends SubsystemBase {
   public void startClimbing() {
     climberMotor.set(climbSpeed);
   }
-  public boolean isLimitHit() {
-    return climberLimit.get();
+  public boolean isExteneded() {
+    return climberLimitExtended.get();
+  }
+  public boolean isHome() {
+    return climberLimitHome.get();
   }
   /**
    * Example command factory method.

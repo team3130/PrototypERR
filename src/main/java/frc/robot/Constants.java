@@ -35,7 +35,8 @@ public final class Constants {
   }
 
   public static class IDs{
-    public static final int climberLimit = ?;
+    public static final int climberLimitHome = ?;
+    public static final int climberLimitExtended = ?;
   }
 
   public static class Swerve {
