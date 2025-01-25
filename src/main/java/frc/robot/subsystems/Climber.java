@@ -15,7 +15,7 @@ public class Climber extends SubsystemBase {
   private final TalonFX climberMotor;
   private final DigitalInput limitHome;
   private final DigitalInput limitExtended;
-  private final double climbSpeed = 5;
+  private final double climbSpeed = .1;
 
   public Climber() {
     climberMotor = new TalonFX(Constants.CAN.climberMotor, "rio");
