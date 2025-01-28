@@ -4,15 +4,19 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.SignalLogger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.*;
 import frc.robot.commands.chassis.ResetOdometryForward;
 import frc.robot.commands.chassis.RotateTo90;
@@ -80,6 +84,13 @@ public class RobotContainer {
     new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
     new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
 
+    new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(chassis.sysIdDynamic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(chassis.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+    new JoystickButton(driverController, Constants.PS5.BTN_LBUMPER).whileTrue(chassis.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+    new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(chassis.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+
+
+
     //new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
     //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
@@ -101,6 +112,13 @@ public class RobotContainer {
 
   public void resetOdometryForward() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+
+  public void startSignalLogging() {
+    SignalLogger.start();
+  }
+  public void stopSignalLogging() {
+    SignalLogger.stop();
   }
 
   /**

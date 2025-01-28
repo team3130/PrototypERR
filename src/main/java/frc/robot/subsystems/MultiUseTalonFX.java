@@ -4,7 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -13,6 +15,7 @@ public class MultiUseTalonFX extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   public MultiUseTalonFX() {
     talon = new TalonFX(Constants.CAN.Falcon, "rio");
+    talon.getConfigurator().apply(new MotorOutputConfigs().withNeutralMode(NeutralModeValue.Brake));
   }
 
   public void runAtSpeed(double speed) {

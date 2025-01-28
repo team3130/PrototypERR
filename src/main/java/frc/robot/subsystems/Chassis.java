@@ -17,23 +17,33 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.sensors.Navx;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
+
+import static edu.wpi.first.units.Units.*;
 
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
+    public final SysIdRoutine logRoutine;
     private RobotConfig config;
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
@@ -68,6 +78,9 @@ public class Chassis extends SubsystemBase {
      * the limelight object which is used for updating odometry
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
+        logRoutine = new SysIdRoutine(new SysIdRoutine.Config(),
+                new SysIdRoutine.Mechanism(this::voltageConsumer, this::logConsumer, this, "Chassis"));
+
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
@@ -287,6 +300,29 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+    public void voltageConsumer(Voltage volts) {
+        for(SwerveModule module: modules) {
+            module.basicRun(volts.in(Units.Volts));
+        }
+    }
+
+    public void logConsumer(SysIdRoutineLog logger) {
+        String[] names = {"FrontLeft", "FrontRight", "BackRight", "BackLeft"};
+        for(int i = 0; i < 4; i++) {
+            logger.motor(names[i])
+                    .linearPosition(Meters.of(modules[i].getDrivePosition()))
+                    .voltage(Volts.of(modules[i].getDriveVoltage()))
+                    .linearVelocity(MetersPerSecond.of(modules[i].getDriveVelocity()));
+        }
+    }
+
+    public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
+        return logRoutine.quasistatic(direction);
+    }
+
+    public Command sysIdDynamic(SysIdRoutine.Direction direction) {
+        return logRoutine.dynamic(direction);
+    }
     /**
      * subsystem looped call made by the scheduler.
      * Updates the odometry from swerve and April Tags.

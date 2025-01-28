@@ -27,7 +27,7 @@ public class ResetOdometryForward extends InstantCommand {
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
       m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))));
     } else { */
-    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))));
 
   }
 }

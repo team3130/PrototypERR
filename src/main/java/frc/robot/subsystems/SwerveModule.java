@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -29,6 +32,25 @@ public class SwerveModule implements Sendable {
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
     final TalonFXConfiguration steerTalonConfig = new TalonFXConfiguration();
     final TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
+
+    final VelocityDutyCycle driveVeloRequest = new VelocityDutyCycle(0);
+    Slot0Configs slot0Configs;
+    private double slot0_kS = 0;
+    private double slot0_kV = 0;
+    private double slot0_kA = 0;
+    private double slot0_kP = 0;
+    private double slot0_kI = 0;
+    private double slot0_kD = 0;
+
+    final VelocityDutyCycle steerVeloRequest = new VelocityDutyCycle(0); //not implemented yet
+    Slot1Configs slot1Configs;
+    private double slot1_kS = 0;
+    private double slot1_kV = 0;
+    private double slot1_kA = 0;
+    private double slot1_kP = 0;
+    private double slot1_kI = 0;
+    private double slot1_kD = 0;
+
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
@@ -60,6 +82,16 @@ public class SwerveModule implements Sendable {
 
         absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
+
+        slot0Configs = new Slot0Configs();
+        slot0Configs.kS = slot0_kS;
+        slot0Configs.kV = slot0_kV;
+        slot0Configs.kA = slot0_kA;
+        slot0Configs.kP = slot0_kP;
+        slot0Configs.kI = slot0_kI;
+        slot0Configs.kD = slot0_kD;
+        driveMotor.getConfigurator().apply(slot0Configs);
+
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
                 withSupplyCurrentLimit(40).withSupplyCurrentLowerTime(0)), 0.01);
@@ -171,9 +203,10 @@ public class SwerveModule implements Sendable {
         return new SwerveModuleState(getDriveVelocity(), getTurningPosition());
     }
 
-    //Method runs just with a speed of 1
+    //Method runs just with speed
     public void basicRun(double speed) {
-        driveMotor.setControl(driveMotorVoltRequest.withOutput(speed));
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), 0));
+        driveMotor.setControl(driveVeloRequest.withVelocity(speed));
     }
 
     // Default stop method to stop the motors
@@ -216,6 +249,28 @@ public class SwerveModule implements Sendable {
         driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
         steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+    }
+
+    public void setTeleopDesiredStateVelo(SwerveModuleState state) {
+        // dead-band
+        if(Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+        updatePIDValues(); //mostly for testing
+
+        //max turn is 90 degree optimization
+        state.optimize(getState().angle);
+        //set velocity to speed from state for drive motor
+        driveMotor.setControl(driveVeloRequest.withVelocity(state.speedMetersPerSecond));
+        //set the steering motor based off the output of the PID controller
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+    }
+
+    public void driveAtVelocity( double velocity) {
+        updatePIDValues();
+        steerMotor.setVoltage(0);
+        driveMotor.setControl(driveVeloRequest.withVelocity(velocity));
     }
 
     /**
@@ -304,6 +359,19 @@ public class SwerveModule implements Sendable {
 
     public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValueAsDouble();}
     public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValueAsDouble();}
+
+    public double getDriveVoltage() {return driveMotor.getMotorVoltage().getValueAsDouble();}
+    public double getSteerVoltage() {return steerMotor.getMotorVoltage().getValueAsDouble();}
+
+    public void updatePIDValues() {
+        slot0Configs.kS = slot0_kS;
+        slot0Configs.kV = slot0_kV;
+        slot0Configs.kA = slot0_kA;
+        slot0Configs.kP = slot0_kP;
+        slot0Configs.kI = slot0_kI;
+        slot0Configs.kD = slot0_kD;
+        driveMotor.getConfigurator().apply(slot0Configs);
+    }
 
     /**
      * Builds the sendable for shuffleboard
