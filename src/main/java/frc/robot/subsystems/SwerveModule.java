@@ -65,7 +65,7 @@ public class SwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
+        turningPidController = new PIDController(Constants.Swerve.turning_kP_Swerve[side], Constants.Swerve.turning_kI_Swerve[side], Constants.Swerve.turning_kD_Swerve[side]);
 
         steerTalonConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive); //set config to clockwise
         steerMotor.getConfigurator().apply(steerTalonConfig); // config factory default
@@ -257,7 +257,6 @@ public class SwerveModule implements Sendable {
             stop();
             return;
         }
-        updatePIDValues(); //mostly for testing
 
         //max turn is 90 degree optimization
         state.optimize(getState().angle);
@@ -373,6 +372,20 @@ public class SwerveModule implements Sendable {
         driveMotor.getConfigurator().apply(slot0Configs);
     }
 
+    public double getSlot0_kS() {return slot0_kS;}
+    public double getSlot0_kA() { return slot0_kV;}
+    public double getSlot0_kV() { return slot0_kA;}
+    public double getSlot0_kP() { return slot0_kP;}
+    public double getSlot0_kI() { return slot0_kI;}
+    public double getSlot0_kD() { return slot0_kD;}
+
+    public void setSlot0_kS(double value) {slot0_kS = value;}
+    public void setSlot0_kA(double value) { slot0_kV = value;}
+    public void setSlot0_kV(double value) { slot0_kA = value;}
+    public void setSlot0_kP(double value) { slot0_kP = value;}
+    public void setSlot0_kI(double value) { slot0_kI = value;}
+    public void setSlot0_kD(double value) { slot0_kD = value;}
+
     /**
      * Builds the sendable for shuffleboard
      * @param builder sendable builder
@@ -396,9 +409,16 @@ public class SwerveModule implements Sendable {
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
-            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
-            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+            builder.addDoubleProperty("Turning P " + getRealSide(), this::getPValue, this::setPValue);
+            builder.addDoubleProperty("Turning I " + getRealSide(), this::getIValue, this::setIValue);
+            builder.addDoubleProperty("Turning D " + getRealSide(), this::getDValue, this::setDValue);
+
+            builder.addDoubleProperty("Velo S " + getRealSide(), this::getSlot0_kS, this::setSlot0_kS);
+            builder.addDoubleProperty("Velo A " + getRealSide(), this::getSlot0_kA, this::setSlot0_kA);
+            builder.addDoubleProperty("Velo V " + getRealSide(), this::getSlot0_kV, this::setSlot0_kV);
+            builder.addDoubleProperty("Velo P " + getRealSide(), this::getSlot0_kP, this::setSlot0_kP);
+            builder.addDoubleProperty("Velo I " + getRealSide(), this::getSlot0_kI, this::setSlot0_kI);
+            builder.addDoubleProperty("Velo D " + getRealSide(), this::getSlot0_kD, this::setSlot0_kD);
         }
     }
 

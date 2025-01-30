@@ -158,6 +158,14 @@ public class Chassis extends SubsystemBase {
             setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
+    public void teleopDriveVelo(double x, double y, double theta) {teleopDriveVelo(x, y, theta, getFieldRelative());}
+    public void teleopDriveVelo(double x, double y, double theta, boolean fieldRelative) {
+        if(fieldRelative) {
+            setTeleopModuleStatesVelo(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y , theta, getRotation2d())));
+        } else {
+            setTeleopModuleStatesVelo(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+        }
+    }
 
     /*
     public void driveTranslation2D(Translation2d idk, double theta) {
@@ -270,6 +278,15 @@ public class Chassis extends SubsystemBase {
         modules[Constants.SwerveModules.four].setAutonDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
+    public void setTeleopModuleStatesVelo(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.four]);
+    }
+
 
 
     // Runs all drive at 1 voltage
@@ -283,6 +300,13 @@ public class Chassis extends SubsystemBase {
     public void turnToAngle(double setpoint) {
         for (SwerveModule module : modules) {
             module.turnToAngle(setpoint);
+        }
+    }
+
+    //Spins the wheels at a velocity
+    public void driveAtVelocity(double setpoint) {
+        for (SwerveModule module : modules) {
+            module.driveAtVelocity(setpoint);
         }
     }
 
@@ -408,6 +432,12 @@ public class Chassis extends SubsystemBase {
     public String getStringOdometry() { return odometry.getEstimatedPosition().toString(); }
     public SwerveDrivePoseEstimator getOdometry() {
         return odometry;
+    }
+
+    public void updateDrivePID() {
+        for(SwerveModule module: modules) {
+            updateDrivePID();
+        }
     }
 
     /**

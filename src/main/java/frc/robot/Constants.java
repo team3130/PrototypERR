@@ -113,10 +113,45 @@ public final class Constants {
     public final static double kI_BackLeft = 0;
     public final static double kD_BackLeft = 0;
     public final static double kF_BackLeft = 0;
-    public final static double[] kP_Swerve = new double[] {kP_FrontLeft, kP_FrontRight, kP_BackRight, kP_BackLeft};
-    public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_FrontRight, kI_BackRight, kI_BackLeft};
-    public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_FrontRight, kD_BackRight, kD_BackLeft};
-    public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_FrontRight, kF_BackRight, kF_BackLeft};
+    public final static double[] turning_kP_Swerve = new double[] {kP_FrontLeft, kP_FrontRight, kP_BackRight, kP_BackLeft};
+    public final static double[] turning_kI_Swerve = new double[] {kI_FrontLeft, kI_FrontRight, kI_BackRight, kI_BackLeft};
+    public final static double[] turning_kD_Swerve = new double[] {kD_FrontLeft, kD_FrontRight, kD_BackRight, kD_BackLeft};
+    public final static double[] turning_kF_Swerve = new double[] {kF_FrontLeft, kF_FrontRight, kF_BackRight, kF_BackLeft};
+
+    private final static double drive_kS_FrontLeft = 0;
+    private final static double drive_kA_FrontLeft = 0;
+    private final static double drive_kV_FrontLeft = 0;
+    private final static double drive_kP_FrontLeft = 0;
+    private final static double drive_kI_FrontLeft = 0;
+    private final static double drive_kD_FrontLeft = 0;
+
+    private final static double drive_kS_FrontRight = 0;
+    private final static double drive_kA_FrontRight = 0;
+    private final static double drive_kV_FrontRight = 0;
+    private final static double drive_kP_FrontRight = 0;
+    private final static double drive_kI_FrontRight = 0;
+    private final static double drive_kD_FrontRight = 0;
+
+    private final static double drive_kS_BackRight = 0;
+    private final static double drive_kA_BackRight = 0;
+    private final static double drive_kV_BackRight = 0;
+    private final static double drive_kP_BackRight = 0;
+    private final static double drive_kI_BackRight = 0;
+    private final static double drive_kD_BackRight = 0;
+
+    private final static double drive_kS_BackLeft = 0;
+    private final static double drive_kA_BackLeft = 0;
+    private final static double drive_kV_BackLeft = 0;
+    private final static double drive_kP_BackLeft = 0;
+    private final static double drive_kI_BackLeft = 0;
+    private final static double drive_kD_BackLeft = 0;
+
+    public final static double[] drive_kS_Swerve = new double[] {drive_kS_FrontLeft, drive_kS_FrontRight, drive_kS_BackRight, drive_kS_BackLeft};
+    public final static double[] drive_kA_Swerve = new double[] {drive_kA_FrontLeft, drive_kA_FrontRight, drive_kA_BackRight, drive_kA_BackLeft};
+    public final static double[] drive_kV_Swerve = new double[] {drive_kV_FrontLeft, drive_kV_FrontRight, drive_kV_BackRight, drive_kV_BackLeft};
+    public final static double[] drive_kP_Swerve = new double[] {drive_kP_FrontLeft, drive_kP_FrontRight, drive_kP_BackRight, drive_kP_BackLeft};
+    public final static double[] drive_kI_Swerve = new double[] {drive_kI_FrontLeft, drive_kI_FrontRight, drive_kI_BackRight, drive_kI_BackLeft};
+    public final static double[] drive_kD_Swerve = new double[] {drive_kD_FrontLeft, drive_kD_FrontRight, drive_kD_BackRight, drive_kD_BackLeft};
   }
 
   public static class SwerveModules {

@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.*;
-import frc.robot.commands.chassis.ResetOdometryForward;
-import frc.robot.commands.chassis.RotateTo90;
-import frc.robot.commands.chassis.TeleopDrive;
+import frc.robot.commands.chassis.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -67,7 +65,8 @@ public class RobotContainer {
     exportShuffleBoardData();
 
     // Set Default commands
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    //chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    chassis.setDefaultCommand(new VeloTeleopDrive(chassis, driverController));
   }
 
   /**
@@ -80,9 +79,9 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
-    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
+    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
     new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
+    new POVButton(driverController, Constants.PS5.POV_W).whileTrue(new UpdateDrivePID(chassis));
 
     new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(chassis.sysIdDynamic(SysIdRoutine.Direction.kForward));
     new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(chassis.sysIdDynamic(SysIdRoutine.Direction.kReverse));
