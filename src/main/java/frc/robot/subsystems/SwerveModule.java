@@ -1,11 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.configs.*;
+import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -34,22 +30,22 @@ public class SwerveModule implements Sendable {
     final TalonFXConfiguration driveTalonConfig = new TalonFXConfiguration();
 
     final VelocityDutyCycle driveVeloRequest = new VelocityDutyCycle(0);
-    Slot0Configs slot0Configs;
-    private double slot0_kS = 0;
-    private double slot0_kV = 0;
-    private double slot0_kA = 0;
-    private double slot0_kP = 0;
-    private double slot0_kI = 0;
-    private double slot0_kD = 0;
+    Slot0Configs slot0DriveConfigs;
+    private double drive_kS = 0;
+    private double drive_kV = 0.5;
+    private double drive_kA = 0;
+    private double drive_kP = 0;
+    private double drive_kI = 0;
+    private double drive_kD = 0;
 
-    final VelocityDutyCycle steerVeloRequest = new VelocityDutyCycle(0); //not implemented yet
-    Slot1Configs slot1Configs;
-    private double slot1_kS = 0;
-    private double slot1_kV = 0;
-    private double slot1_kA = 0;
-    private double slot1_kP = 0;
-    private double slot1_kI = 0;
-    private double slot1_kD = 0;
+    final MotionMagicVoltage steerVeloRequest = new MotionMagicVoltage(0); //not implemented yet
+    Slot0Configs slot0SteerConfigs;
+    private double steer_kS = 0;
+    private double steer_kV = 0;
+    private double steer_kA = 0;
+    private double steer_kP = 1;
+    private double steer_kI = 0;
+    private double steer_kD = 0;
 
 
     //private double steeringVoltage = 4d;
@@ -68,12 +64,13 @@ public class SwerveModule implements Sendable {
         turningPidController = new PIDController(Constants.Swerve.turning_kP_Swerve[side], Constants.Swerve.turning_kI_Swerve[side], Constants.Swerve.turning_kD_Swerve[side]);
 
         steerTalonConfig.MotorOutput.withInverted(InvertedValue.Clockwise_Positive); //set config to clockwise
+        steerTalonConfig.ClosedLoopGeneral.withContinuousWrap(true);
         steerMotor.getConfigurator().apply(steerTalonConfig); // config factory default
         steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
         //steerMotor.setInverted(true);
 
         driveTalonConfig.MotorOutput.withInverted(InvertedValue.CounterClockwise_Positive); //set config to counter-clockwise
-        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+        driveMotor.getConfigurator().apply(driveTalonConfig);
         driveMotor.setNeutralMode(NeutralModeValue.Brake);
         //driveMotor.setInverted(false);
 
@@ -83,14 +80,23 @@ public class SwerveModule implements Sendable {
         absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
 
-        slot0Configs = new Slot0Configs();
-        slot0Configs.kS = slot0_kS;
-        slot0Configs.kV = slot0_kV;
-        slot0Configs.kA = slot0_kA;
-        slot0Configs.kP = slot0_kP;
-        slot0Configs.kI = slot0_kI;
-        slot0Configs.kD = slot0_kD;
-        driveMotor.getConfigurator().apply(slot0Configs);
+        slot0DriveConfigs = new Slot0Configs();
+        slot0DriveConfigs.kS = drive_kS;
+        slot0DriveConfigs.kV = drive_kV;
+        slot0DriveConfigs.kA = drive_kA;
+        slot0DriveConfigs.kP = drive_kP;
+        slot0DriveConfigs.kI = drive_kI;
+        slot0DriveConfigs.kD = drive_kD;
+        driveMotor.getConfigurator().apply(slot0DriveConfigs);
+
+        slot0SteerConfigs = new Slot0Configs();
+        slot0SteerConfigs.kS = steer_kS;
+        slot0SteerConfigs.kV = steer_kV;
+        slot0SteerConfigs.kA = steer_kA;
+        slot0SteerConfigs.kP = steer_kP;
+        slot0SteerConfigs.kI = steer_kI;
+        slot0SteerConfigs.kD = steer_kD;
+        steerMotor.getConfigurator().apply(slot0SteerConfigs);
 
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
@@ -144,9 +150,9 @@ public class SwerveModule implements Sendable {
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
         if (side == 0 || side == 1) {
-            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.frontDriveRotToMeters * 10d;
+            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.frontDriveRotToMeters;
         } else {
-            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.backDriveRotToMeters * 10d;
+            return driveMotor.getVelocity().getValueAsDouble() * Constants.SwerveConversions.backDriveRotToMeters;
         }
     }
 
@@ -205,7 +211,7 @@ public class SwerveModule implements Sendable {
 
     //Method runs just with speed
     public void basicRun(double speed) {
-        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), 0));
+        steerMotor.setControl(steerVeloRequest.withPosition(0));
         driveMotor.setControl(driveVeloRequest.withVelocity(speed));
     }
 
@@ -257,18 +263,20 @@ public class SwerveModule implements Sendable {
             stop();
             return;
         }
+        updateDrivePIDValues(); //mostly for testing
+        updateSteerPIDValues(); //mostly for testing
 
         //max turn is 90 degree optimization
         state.optimize(getState().angle);
         //set velocity to speed from state for drive motor
         driveMotor.setControl(driveVeloRequest.withVelocity(state.speedMetersPerSecond));
         //set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setControl(steerVeloRequest.withPosition(state.angle.getRadians()));
     }
 
     public void driveAtVelocity( double velocity) {
-        updatePIDValues();
-        steerMotor.setVoltage(0);
+        updateDrivePIDValues();
+        steerMotor.setControl(steerVeloRequest.withPosition(0));
         driveMotor.setControl(driveVeloRequest.withVelocity(velocity));
     }
 
@@ -278,7 +286,7 @@ public class SwerveModule implements Sendable {
      */
     public void turnToAngle(double setpoint) {
         //steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), setpoint));
-        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), Math.toRadians(setpoint)));
+        steerMotor.setControl(steerVeloRequest.withPosition(setpoint));
     }
 
 
@@ -362,29 +370,56 @@ public class SwerveModule implements Sendable {
     public double getDriveVoltage() {return driveMotor.getMotorVoltage().getValueAsDouble();}
     public double getSteerVoltage() {return steerMotor.getMotorVoltage().getValueAsDouble();}
 
-    public void updatePIDValues() {
-        slot0Configs.kS = slot0_kS;
-        slot0Configs.kV = slot0_kV;
-        slot0Configs.kA = slot0_kA;
-        slot0Configs.kP = slot0_kP;
-        slot0Configs.kI = slot0_kI;
-        slot0Configs.kD = slot0_kD;
-        driveMotor.getConfigurator().apply(slot0Configs);
+    public void updateDrivePIDValues() {
+        slot0DriveConfigs.kS = drive_kS;
+        slot0DriveConfigs.kV = drive_kV;
+        slot0DriveConfigs.kA = drive_kA;
+        slot0DriveConfigs.kP = drive_kP;
+        slot0DriveConfigs.kI = drive_kI;
+        slot0DriveConfigs.kD = drive_kD;
+        driveMotor.getConfigurator().apply(slot0DriveConfigs);
     }
 
-    public double getSlot0_kS() {return slot0_kS;}
-    public double getSlot0_kA() { return slot0_kV;}
-    public double getSlot0_kV() { return slot0_kA;}
-    public double getSlot0_kP() { return slot0_kP;}
-    public double getSlot0_kI() { return slot0_kI;}
-    public double getSlot0_kD() { return slot0_kD;}
+    public void updateSteerPIDValues() {
+        slot0SteerConfigs.kS = steer_kS;
+        slot0SteerConfigs.kV = steer_kV;
+        slot0SteerConfigs.kA = steer_kA;
+        slot0SteerConfigs.kP = steer_kP;
+        slot0SteerConfigs.kI = steer_kI;
+        slot0SteerConfigs.kD = steer_kD;
+        steerMotor.getConfigurator().apply(slot0SteerConfigs);
+    }
 
-    public void setSlot0_kS(double value) {slot0_kS = value;}
-    public void setSlot0_kA(double value) { slot0_kV = value;}
-    public void setSlot0_kV(double value) { slot0_kA = value;}
-    public void setSlot0_kP(double value) { slot0_kP = value;}
-    public void setSlot0_kI(double value) { slot0_kI = value;}
-    public void setSlot0_kD(double value) { slot0_kD = value;}
+
+    public double getDrive_kS() {return drive_kS;}
+    public double getDrive_kV() { return drive_kV;}
+    public double getDrive_kA() { return drive_kA;}
+    public double getDrive_kP() { return drive_kP;}
+    public double getDrive_kI() { return drive_kI;}
+    public double getDrive_kD() { return drive_kD;}
+
+    public void setDrive_kS(double value) {
+        drive_kS = value;}
+    public void setDrive_kA(double value) { drive_kA = value;}
+    public void setDrive_kV(double value) { drive_kV = value;}
+    public void setDrive_kP(double value) { drive_kP = value;}
+    public void setDrive_kI(double value) { drive_kI = value;}
+    public void setDrive_kD(double value) { drive_kD = value;}
+
+    public double getSteer_kS() {return steer_kS;}
+    public double getSteer_kV() { return steer_kV;}
+    public double getSteer_kA() { return steer_kA;}
+    public double getSteer_kP() { return steer_kP;}
+    public double getSteer_kI() { return steer_kI;}
+    public double getSteer_kD() { return steer_kD;}
+
+    public void setSteer_kS(double value) {
+        steer_kS = value;}
+    public void setSteer_kA(double value) { steer_kA = value;}
+    public void setSteer_kV(double value) { steer_kV = value;}
+    public void setSteer_kP(double value) { steer_kP = value;}
+    public void setSteer_kI(double value) { steer_kI = value;}
+    public void setSteer_kD(double value) { steer_kD = value;}
 
     /**
      * Builds the sendable for shuffleboard
@@ -394,8 +429,9 @@ public class SwerveModule implements Sendable {
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
             builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
-            // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+            builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
+            builder.addDoubleProperty("Steer Angle", this::getSteerPositionWrapped, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRots, null);
             builder.addDoubleProperty("Constant Steering voltage", this::getSwerveSteeringVoltage, this::setSwerveSteeringVoltage);
@@ -413,12 +449,21 @@ public class SwerveModule implements Sendable {
             builder.addDoubleProperty("Turning I " + getRealSide(), this::getIValue, this::setIValue);
             builder.addDoubleProperty("Turning D " + getRealSide(), this::getDValue, this::setDValue);
 
-            builder.addDoubleProperty("Velo S " + getRealSide(), this::getSlot0_kS, this::setSlot0_kS);
-            builder.addDoubleProperty("Velo A " + getRealSide(), this::getSlot0_kA, this::setSlot0_kA);
-            builder.addDoubleProperty("Velo V " + getRealSide(), this::getSlot0_kV, this::setSlot0_kV);
-            builder.addDoubleProperty("Velo P " + getRealSide(), this::getSlot0_kP, this::setSlot0_kP);
-            builder.addDoubleProperty("Velo I " + getRealSide(), this::getSlot0_kI, this::setSlot0_kI);
-            builder.addDoubleProperty("Velo D " + getRealSide(), this::getSlot0_kD, this::setSlot0_kD);
+            builder.addDoubleProperty("Drive Velo S " + getRealSide(), this::getDrive_kS, this::setDrive_kS);
+            builder.addDoubleProperty("Drive Velo A " + getRealSide(), this::getDrive_kA, this::setDrive_kA);
+            builder.addDoubleProperty("Drive Velo V " + getRealSide(), this::getDrive_kV, this::setDrive_kV);
+            builder.addDoubleProperty("Drive Velo P " + getRealSide(), this::getDrive_kP, this::setDrive_kP);
+            builder.addDoubleProperty("Drive Velo I " + getRealSide(), this::getDrive_kI, this::setDrive_kI);
+            builder.addDoubleProperty("Drive Velo D " + getRealSide(), this::getDrive_kD, this::setDrive_kD);
+
+            builder.addDoubleProperty("Steer Velo S " + getRealSide(), this::getSteer_kS, this::setSteer_kS);
+            builder.addDoubleProperty("Steer Velo A " + getRealSide(), this::getSteer_kA, this::setSteer_kA);
+            builder.addDoubleProperty("Steer Velo V " + getRealSide(), this::getSteer_kV, this::setSteer_kV);
+            builder.addDoubleProperty("Steer Velo P " + getRealSide(), this::getSteer_kP, this::setSteer_kP);
+            builder.addDoubleProperty("Steer Velo I " + getRealSide(), this::getSteer_kI, this::setSteer_kI);
+            builder.addDoubleProperty("Steer Velo D " + getRealSide(), this::getSteer_kD, this::setSteer_kD);
+
+
         }
     }
 
