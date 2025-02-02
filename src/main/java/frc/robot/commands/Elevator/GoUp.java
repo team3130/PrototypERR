@@ -2,36 +2,31 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Manipulator;
+package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Manipulator;
 
 /** An example command that uses an example subsystem. */
-public class ManipOuttake extends Command {
+public class GoUp extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Manipulator manip;
   private final Elevator elevator;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param manip The subsystem used by this command.
+   * @param elevator The subsystem used by this command.
    */
-  public ManipOuttake(Manipulator manip, Elevator elevator) {
-    this.manip = manip;
+  public GoUp(Elevator elevator) {
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(manip);
+    addRequirements(elevator);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(elevator.isAtL1() || elevator.isAtL2() || elevator.isAtL3() || elevator.isAtL4()) {
-      manip.runManip();
-    }
+    elevator.goUp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,13 +35,11 @@ public class ManipOuttake extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    manip.stopManip();
-  }
+  public void end(boolean interrupted) {elevator.stop();}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !manip.getFirstBeam() && !manip.getSecondBeam();
+    return elevator.getPosition() > elevator.getMaxPosition();
   }
 }

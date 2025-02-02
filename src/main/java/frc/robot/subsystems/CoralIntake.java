@@ -8,23 +8,24 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 //written in phoenix 5 since TalonSRX doesn't exist in phoenix 6
 public class CoralIntake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private final TalonSRX intake;
-  private final TalonSRX pivot;
+  private final Solenoid actuation;
   private final DigitalInput limit;
-  private double intakeSpeed = 0.5;
-  private double pivotSpeed = 0.5;
+  private double intakeSpeed = 0.2;
+
   public CoralIntake() {
     intake = new TalonSRX(Constants.CAN.CoralIntake);
-    pivot = new TalonSRX(Constants.CAN.CoralIntakePivot);
+    actuation = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.CoralIntakeActuationPNMChannel);
     limit = new DigitalInput(Constants.IDs.IntakeLimitSwitch);
 
-    pivot.configFactoryDefault();
-    pivot.setInverted(false);
+    actuation.set(false);
 
     intake.configFactoryDefault();
     intake.setInverted(false);
@@ -42,23 +43,14 @@ public class CoralIntake extends SubsystemBase {
     intake.set(ControlMode.PercentOutput, -intakeSpeed);
   }
 
-  public void stopPivot() {
-    pivot.set(ControlMode.PercentOutput, 0);
-  }
+  public void deactuate() {actuation.set(false);}
 
-  public void pivotDown() {
-    pivot.set(ControlMode.PercentOutput, -pivotSpeed);
-  }
-
-  public void pivotUp() {
-    pivot.set(ControlMode.PercentOutput, pivotSpeed);
+  public void actuate() {
+    actuation.set(true);
   }
 
   public double getIntakeSpeed() {return intakeSpeed;}
   public void setIntakeSpeed(double value) {intakeSpeed = value;}
-
-  public double getPivotSpeed() {return pivotSpeed;}
-  public void setPivotSpeed(double value) {pivotSpeed = value;}
 
   public boolean brokeLimit() {return limit.get();}
 
@@ -72,8 +64,6 @@ public class CoralIntake extends SubsystemBase {
       builder.setSmartDashboardType("Coral Intake");
 
       builder.addDoubleProperty("Intake Speed", this::getIntakeSpeed, this::setIntakeSpeed);
-      builder.addDoubleProperty("Pivot Speed", this::getPivotSpeed, this::setPivotSpeed);
-
       builder.addBooleanProperty("Intake Limit", this::brokeLimit, null);
     }
   }

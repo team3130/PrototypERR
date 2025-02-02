@@ -18,7 +18,7 @@ public class Manipulator extends SubsystemBase {
   private final DigitalInput firstBeam;
   private final DigitalInput secondBeam;
 
-  private double manipSpeed = 0.5;
+  private double manipSpeed = 0.2;
   public Manipulator() {
     manip = new TalonSRX(Constants.CAN.Manipulator);
     firstBeam = new DigitalInput(Constants.IDs.ManipulatorFirstBeam);

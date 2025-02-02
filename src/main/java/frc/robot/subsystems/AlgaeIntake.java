@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -45,9 +46,7 @@ public class AlgaeIntake extends SubsystemBase {
   public void deactuateIntake() {
     actuation.set(ControlMode.PercentOutput, -actuationSpeed);
   }
-  public void stopActuation() {
-    actuation.set(ControlMode.PercentOutput, 0);
-  }
+  public void stopActuation() {actuation.set(ControlMode.PercentOutput, 0);}
 
   public double getIntakeSpeed() {return intakeSpeed;}
   public void setIntakeSpeed(double value) {intakeSpeed = value;}

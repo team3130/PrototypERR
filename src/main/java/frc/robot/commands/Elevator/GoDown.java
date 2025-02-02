@@ -6,10 +6,9 @@ package frc.robot.commands.Elevator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class GoToHome extends Command {
+public class GoDown extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Elevator elevator;
 
@@ -18,7 +17,7 @@ public class GoToHome extends Command {
    *
    * @param elevator The subsystem used by this command.
    */
-  public GoToHome(Elevator elevator) {
+  public GoDown(Elevator elevator) {
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(elevator);
@@ -27,7 +26,7 @@ public class GoToHome extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    elevator.goToHome();
+    elevator.goDown();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,6 +40,6 @@ public class GoToHome extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return elevator.brokeLimitSwitch();
+    return elevator.getPosition() < elevator.getMinPosition() || elevator.brokeLimitSwitch();
   }
 }

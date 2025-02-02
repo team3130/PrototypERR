@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -38,13 +39,6 @@ public class Elevator extends SubsystemBase {
   private double slot0kI = 0;
   private double slot0kD = 0;
 
-  private final MotionMagicDutyCycle voltRequest1;
-  private final Slot1Configs slot1Configs;
-  private double slot1kG = 0;
-  private double slot1kP = 0;
-  private double slot1kI = 0;
-  private double slot1kD = 0;
-
   private boolean zeroed = false;
   private boolean atHome = false;
   private boolean atMinPosition = false;
@@ -60,6 +54,8 @@ public class Elevator extends SubsystemBase {
     encoder = new CANcoder(Constants.IDs.ElevatorEncoder);
 
     encoder.getConfigurator().apply(new CANcoderConfiguration());
+
+    rightMotor.setControl(new StrictFollower(leftMotor.getDeviceID()));
 
     leftMotor.getConfigurator().apply(new TalonFXConfiguration());
     rightMotor.getConfigurator().apply(new TalonFXConfiguration());
@@ -77,35 +73,23 @@ public class Elevator extends SubsystemBase {
     slot0Configs.kI = slot0kI;
     slot0Configs.kD = slot0kD;
 
-    voltRequest1 = new MotionMagicDutyCycle(0);
-    slot1Configs = new Slot1Configs().withGravityType(GravityTypeValue.Elevator_Static);
-    slot1Configs.kG = slot1kG;
-    slot1Configs.kP = slot1kP;
-    slot1Configs.kI = slot1kI;
-    slot1Configs.kD = slot1kD;
-
     leftMotor.getConfigurator().apply(slot0Configs);
-    rightMotor.getConfigurator().apply(slot1Configs);
   }
 
   public void stop() {
     leftMotor.setControl(voltRequest0.withPosition(0));
-    rightMotor.setControl(voltRequest1.withPosition(0));
   }
 
   public void goDown() {
     leftMotor.set(-0.2);
-    rightMotor.set(-0.2);
   }
 
   public void goUp() {
     leftMotor.set(0.2);
-    rightMotor.set(0.2);
   }
 
   public void goToSetpoint(double setpoint) {
     leftMotor.setControl(voltRequest0.withPosition(setpoint));
-    rightMotor.setControl(voltRequest1.withPosition(setpoint));
   }
 
   public void goToHome() {
@@ -115,15 +99,28 @@ public class Elevator extends SubsystemBase {
       setZeroed(true);
     }
     setAtHome(true);
+    setAtMinPosition(false);
     setAtL1(false);
     setAtL2(false);
     setAtL3(false);
     setAtL4(false);
   }
 
+  public void goToMinPosition() {
+    goToSetpoint(minPosition);
+    setAtHome(false);
+    setAtMinPosition(true);
+    setAtL1(false);
+    setAtL2(false);
+    setAtL3(false);
+    setAtL4(false);
+  }
+
+
   public void goToL1() {
     goToSetpoint(L1);
     setAtHome(false);
+    setAtMinPosition(false);
     setAtL1(true);
     setAtL2(false);
     setAtL3(false);
@@ -132,6 +129,7 @@ public class Elevator extends SubsystemBase {
   public void goToL2() {
     goToSetpoint(L2);
     setAtHome(false);
+    setAtMinPosition(false);
     setAtL1(false);
     setAtL2(true);
     setAtL3(false);
@@ -140,6 +138,7 @@ public class Elevator extends SubsystemBase {
   public void goToL3() {
     goToSetpoint(L3);
     setAtHome(false);
+    setAtMinPosition(false);
     setAtL1(false);
     setAtL2(false);
     setAtL3(true);
@@ -148,6 +147,7 @@ public class Elevator extends SubsystemBase {
   public void goToL4() {
     goToSetpoint(L4);
     setAtHome(false);
+    setAtMinPosition(false);
     setAtL1(false);
     setAtL2(false);
     setAtL3(false);
@@ -207,15 +207,6 @@ public class Elevator extends SubsystemBase {
   public void setSlot0kI(double value) {slot0kG = value;}
   public void setSlot0kD(double value) {slot0kG = value;}
 
-  public double getSlot1kG() {return slot1kG;}
-  public double getSlot1kP() {return slot1kP;}
-  public double getSlot1kI() {return slot1kI;}
-  public double getSlot1kD() {return slot1kD;}
-  public void setSlot1kG(double value) {slot1kG = value;}
-  public void setSlot1kP(double value) {slot1kP = value;}
-  public void setSlot1kI(double value) {slot1kI = value;}
-  public void setSlot1kD(double value) {slot1kD = value;}
-
 
   /**
    * Initializes the data we send on shuffleboard
@@ -239,10 +230,6 @@ public class Elevator extends SubsystemBase {
       builder.addDoubleProperty("Slot 0 kP", this::getSlot0kP, this::setSlot0kP);
       builder.addDoubleProperty("Slot 0 kI", this::getSlot0kI, this::setSlot0kI);
       builder.addDoubleProperty("Slot 0 kD", this::getSlot0kD, this::setSlot0kD);
-      builder.addDoubleProperty("Slot 1 kG", this::getSlot1kG, this::setSlot1kG);
-      builder.addDoubleProperty("Slot 1 kP", this::getSlot1kP, this::setSlot1kP);
-      builder.addDoubleProperty("Slot 1 kI", this::getSlot1kI, this::setSlot1kI);
-      builder.addDoubleProperty("Slot 1 kD", this::getSlot1kD, this::setSlot1kD);
 
       builder.addBooleanProperty("Broke Limit", this::brokeLimitSwitch, null);
       builder.addBooleanProperty("At Zeroed", this::isZeroed, this::setZeroed);

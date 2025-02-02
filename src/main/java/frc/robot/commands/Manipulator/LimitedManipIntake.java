@@ -30,7 +30,7 @@ public class LimitedManipIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (elevator.isAtHome()) {
+    if (elevator.isAtMinPosition()) {
       manip.runManip();
     }
   }
