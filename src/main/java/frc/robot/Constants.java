@@ -20,10 +20,9 @@ public final class Constants {
   public static final boolean pitMode = false;
 
   public static class CAN {
-    public static final int Pigeon = 1;
-
     public static final int PCM = 21;
     public static final int PDP = 22;
+    public static final int Pigeon = 23;
 
     public static final int Talon1 = 14;
     public static final int Talon2 = 15;
