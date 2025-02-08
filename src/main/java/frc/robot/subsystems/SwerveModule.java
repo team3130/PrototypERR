@@ -32,20 +32,17 @@ public class SwerveModule implements Sendable {
     final VelocityDutyCycle driveVeloRequest = new VelocityDutyCycle(0);
     Slot0Configs slot0DriveConfigs;
     private double drive_kS = 0;
-    private double drive_kV = 0.5;
+    private double drive_kV = 0.124;
     private double drive_kA = 0;
     private double drive_kP = 0;
     private double drive_kI = 0;
     private double drive_kD = 0;
 
-    final MotionMagicVoltage steerVeloRequest = new MotionMagicVoltage(0); //not implemented yet
+    final MotionMagicDutyCycle steerPositionRequest = new MotionMagicDutyCycle(0);
     Slot0Configs slot0SteerConfigs;
-    private double steer_kS = 0;
-    private double steer_kV = 0;
-    private double steer_kA = 0;
-    private double steer_kP = 1;
+    private double steer_kP = 10;
     private double steer_kI = 0;
-    private double steer_kD = 0;
+    private double steer_kD = 0.1;
 
 
     //private double steeringVoltage = 4d;
@@ -90,9 +87,6 @@ public class SwerveModule implements Sendable {
         driveMotor.getConfigurator().apply(slot0DriveConfigs);
 
         slot0SteerConfigs = new Slot0Configs();
-        slot0SteerConfigs.kS = steer_kS;
-        slot0SteerConfigs.kV = steer_kV;
-        slot0SteerConfigs.kA = steer_kA;
         slot0SteerConfigs.kP = steer_kP;
         slot0SteerConfigs.kI = steer_kI;
         slot0SteerConfigs.kD = steer_kD;
@@ -211,7 +205,7 @@ public class SwerveModule implements Sendable {
 
     //Method runs just with speed
     public void basicRun(double speed) {
-        steerMotor.setControl(steerVeloRequest.withPosition(0));
+        steerMotor.setControl(steerPositionRequest.withPosition(0));
         driveMotor.setControl(driveVeloRequest.withVelocity(speed));
     }
 
@@ -271,12 +265,12 @@ public class SwerveModule implements Sendable {
         //set velocity to speed from state for drive motor
         driveMotor.setControl(driveVeloRequest.withVelocity(state.speedMetersPerSecond));
         //set the steering motor based off the output of the PID controller
-        steerMotor.setControl(steerVeloRequest.withPosition(state.angle.getRadians()));
+        steerMotor.setControl(steerPositionRequest.withPosition(state.angle.getRadians()));
     }
 
     public void driveAtVelocity( double velocity) {
         updateDrivePIDValues();
-        steerMotor.setControl(steerVeloRequest.withPosition(0));
+        steerMotor.setControl(steerPositionRequest.withPosition(0));
         driveMotor.setControl(driveVeloRequest.withVelocity(velocity));
     }
 
@@ -286,7 +280,7 @@ public class SwerveModule implements Sendable {
      */
     public void turnToAngle(double setpoint) {
         //steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), setpoint));
-        steerMotor.setControl(steerVeloRequest.withPosition(setpoint));
+        steerMotor.setControl(steerPositionRequest.withPosition(setpoint));
     }
 
 
@@ -381,9 +375,6 @@ public class SwerveModule implements Sendable {
     }
 
     public void updateSteerPIDValues() {
-        slot0SteerConfigs.kS = steer_kS;
-        slot0SteerConfigs.kV = steer_kV;
-        slot0SteerConfigs.kA = steer_kA;
         slot0SteerConfigs.kP = steer_kP;
         slot0SteerConfigs.kI = steer_kI;
         slot0SteerConfigs.kD = steer_kD;
@@ -406,17 +397,10 @@ public class SwerveModule implements Sendable {
     public void setDrive_kI(double value) { drive_kI = value;}
     public void setDrive_kD(double value) { drive_kD = value;}
 
-    public double getSteer_kS() {return steer_kS;}
-    public double getSteer_kV() { return steer_kV;}
-    public double getSteer_kA() { return steer_kA;}
     public double getSteer_kP() { return steer_kP;}
     public double getSteer_kI() { return steer_kI;}
     public double getSteer_kD() { return steer_kD;}
 
-    public void setSteer_kS(double value) {
-        steer_kS = value;}
-    public void setSteer_kA(double value) { steer_kA = value;}
-    public void setSteer_kV(double value) { steer_kV = value;}
     public void setSteer_kP(double value) { steer_kP = value;}
     public void setSteer_kI(double value) { steer_kI = value;}
     public void setSteer_kD(double value) { steer_kD = value;}
@@ -456,9 +440,6 @@ public class SwerveModule implements Sendable {
             builder.addDoubleProperty("Drive Velo I " + getRealSide(), this::getDrive_kI, this::setDrive_kI);
             builder.addDoubleProperty("Drive Velo D " + getRealSide(), this::getDrive_kD, this::setDrive_kD);
 
-            builder.addDoubleProperty("Steer Velo S " + getRealSide(), this::getSteer_kS, this::setSteer_kS);
-            builder.addDoubleProperty("Steer Velo A " + getRealSide(), this::getSteer_kA, this::setSteer_kA);
-            builder.addDoubleProperty("Steer Velo V " + getRealSide(), this::getSteer_kV, this::setSteer_kV);
             builder.addDoubleProperty("Steer Velo P " + getRealSide(), this::getSteer_kP, this::setSteer_kP);
             builder.addDoubleProperty("Steer Velo I " + getRealSide(), this::getSteer_kI, this::setSteer_kI);
             builder.addDoubleProperty("Steer Velo D " + getRealSide(), this::getSteer_kD, this::setSteer_kD);
