@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Chassis;
 
 /** An example command that uses an example subsystem. */
-public class RotateTo90 extends Command {
+public class RotateToSetpoint extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
 
@@ -17,7 +17,7 @@ public class RotateTo90 extends Command {
    *
    * @param chassis The subsystem used by this command.
    */
-  public RotateTo90(Chassis chassis) {
+  public RotateToSetpoint(Chassis chassis) {
     this.chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
@@ -26,7 +26,7 @@ public class RotateTo90 extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.turnToAngle(Math.PI/2);
+    chassis.turnToAngle(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

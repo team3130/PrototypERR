@@ -39,7 +39,7 @@ public class Chassis extends SubsystemBase {
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
-    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pigeon, "Cancun");
+    private final Pigeon2 pigeon = new Pigeon2(Constants.CAN.Pigeon);
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
@@ -126,6 +126,8 @@ public class Chassis extends SubsystemBase {
         teleopDrive(x, y, theta, getFieldRelative());
     }
 
+    public void teleopDriveVelo(double x, double y, double theta) {teleopDriveVelo(x, y, theta, getFieldRelative());}
+
     /**
      * Our main method to drive using three variables. Locked to field relative or robot oriented based off of fieldRelative
      * x is the velocity in the x dimension m/s
@@ -143,6 +145,14 @@ public class Chassis extends SubsystemBase {
             setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
             setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+        }
+    }
+
+    public void teleopDriveVelo(double x, double y, double theta, boolean fieldRelative) {
+        if(fieldRelative) {
+            setTeleopVeloModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+        } else {
+            setTeleopVeloModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 
@@ -255,6 +265,15 @@ public class Chassis extends SubsystemBase {
         modules[Constants.SwerveModules.two].setAutonDesiredState(desiredStates[Constants.SwerveModules.two]);
         modules[Constants.SwerveModules.three].setAutonDesiredState(desiredStates[Constants.SwerveModules.three]);
         modules[Constants.SwerveModules.four].setAutonDesiredState(desiredStates[Constants.SwerveModules.four]);
+    }
+
+    public void setTeleopVeloModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setTeleopVeloDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setTeleopVeloDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setTeleopVeloDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setTeleopVeloDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
 
