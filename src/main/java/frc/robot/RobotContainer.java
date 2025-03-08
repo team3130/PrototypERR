@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import javax.print.attribute.standard.JobHoldUntil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
@@ -88,6 +90,8 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunTalonFX(falcon, -0.5));
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunTalonFX(falcon, 0.5));
     new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new LinearActuation());
+    new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new RunTalonSRX(Talon1, 0.4));
+    new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new RunTalonSRX(Talon1, -.4));
   }
 
   public void exportShuffleBoardData() {
