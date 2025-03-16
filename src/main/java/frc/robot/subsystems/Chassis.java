@@ -164,12 +164,10 @@ public class Chassis extends SubsystemBase {
     }
 
     // Zeros the Navx's heading
-    //public void zeroHeading(){Navx.resetNavX();}
+    public void zeroHeading(){Navx.resetNavX();}
 
     // Zeros the pidegon's heading
-    public void zeroHeading() {
-        pigeon.reset();
-    }
+    //public void zeroHeading() {pigeon.reset();}
 
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
@@ -183,14 +181,14 @@ public class Chassis extends SubsystemBase {
 
     // periodic call to update odometry from encoders
     public void updateOdometryFromSwerve() {
-        odometry.updateWithTime(Timer.getFPGATimestamp(), pigeon.getRotation2d(), generatePoses());
+        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
     // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        odometry.resetPosition(pigeon.getRotation2d(), generatePoses(), pose);
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
@@ -333,16 +331,14 @@ public class Chassis extends SubsystemBase {
     }
 
     // returns the heading the NavX is reading, returning the rotation of the robot in radians
-    /*
+
     public double getHeading() {
         return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
     }
-     */
+
 
     // returns the heading the Pigeon is reading, returning the rotation of the robot in radians
-    public double getHeading() {
-        return Math.toRadians(Math.IEEEremainder(pigeon.getYaw().getValueAsDouble(), 360));
-    }
+    //public double getHeading() {return Math.toRadians(Math.IEEEremainder(pigeon.getYaw().getValueAsDouble(), 360));}
 
     public double getTargetP() { return targetP; }
     public double getTargetI() { return targetI; }
@@ -384,8 +380,8 @@ public class Chassis extends SubsystemBase {
             builder.setSmartDashboardType("Chassis");
 
             builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
-            //builder.addDoubleProperty("Navx", this::getHeading, null);
-            builder.addDoubleProperty("Pigeon", this::getHeading, null);
+            builder.addDoubleProperty("Navx", this::getHeading, null);
+            //builder.addDoubleProperty("Pigeon", this::getHeading, null);
             builder.addDoubleProperty("X position", this::getX, null);
             builder.addDoubleProperty("Y position", this::getY, null);
             builder.addDoubleProperty("rotation", this::getYaw, null);
@@ -419,7 +415,7 @@ public class Chassis extends SubsystemBase {
 
     // method to reset the robot's odometry to the supplied pose
     public void resetPose(Pose2d newPose) {
-        odometry.resetPosition(pigeon.getRotation2d(), generatePoses(), newPose);
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
     }
 
     // ChassisSpeeds supplier in robot relative
