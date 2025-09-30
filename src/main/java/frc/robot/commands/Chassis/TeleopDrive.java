@@ -7,6 +7,7 @@ package frc.robot.commands.Chassis;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
@@ -14,11 +15,11 @@ import frc.robot.subsystems.Chassis;
    /** A default command to drive in teleop based off the joysticks*/
   public class TeleopDrive extends Command {
     private final Chassis chassis;
-    private final PS5Controller controller;
+    private final XboxController xboxController;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
+    public TeleopDrive(Chassis chassis, XboxController xboxController) {
       this.chassis = chassis;
-      this.controller = PS5controller;
+      this.xboxController = xboxController;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(chassis);
@@ -48,15 +49,15 @@ import frc.robot.subsystems.Chassis;
       double y = 0d;
 
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-        y = controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
-        x = controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
+        y = xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_X);
+        x = xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_Y);
       } else { // blue alliance
-        y = -controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
-        x = -controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
+        y = -xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_X);
+        x = -xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_Y);
       }
 
       // theta the same for both alliances
-      theta = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_X);
+      theta = -xboxController.getRawAxis(Constants.Xbox.AXS_RJOYSTICK_X);
 
       // normal driving
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
