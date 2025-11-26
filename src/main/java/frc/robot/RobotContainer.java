@@ -86,7 +86,8 @@ public class RobotContainer {
     //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
     //new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunTalonFX(falcon, -0.5));
     //new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunTalonFX(falcon, 0.5));
-    new JoystickButton(operatorController, Constants.PS5.BTN_RBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, -0.5));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, 0.5));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, -0.5));
   }
 
   public void exportShuffleBoardData() {
