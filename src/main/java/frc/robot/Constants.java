@@ -41,11 +41,14 @@ public final class Constants {
 
 
 
-    public static double slot0_kS = 0; // DONT USE KS
-    public static double slot0_kV = 0; // measured 3/19/24
-    public static double slot0_kP = 0; // measured 3/14/24
+    public static double slot0_kS = 0;
+    public static double slot0_kV = 0;
+    public static double slot0_kP = 0;
     public static double slot0_kI = 0;
     public static double slot0_kD = 0;
+
+    public static double[] translationPID = {5, 0, 0};
+    public static double[] rotationPID = {9, 0, 0.3};
 
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS (dont think this is true anymore ngl)

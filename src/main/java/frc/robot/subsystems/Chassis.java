@@ -105,8 +105,14 @@ public class Chassis extends SubsystemBase {
                     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                     this::driveAutonRobotRelative,
                     new PPHolonomicDriveController( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                            new PIDConstants(0, 0, 0), // Translation PID constants
-                            new PIDConstants(0, 0, 0) // Rotation PID constants
+                            new PIDConstants(
+                                Constants.Swerve.translationPID[0], 
+                                Constants.Swerve.translationPID[1], 
+                                Constants.Swerve.translationPID[2]), // Translation PID constants
+                            new PIDConstants(
+                                Constants.Swerve.rotationPID[0],
+                                Constants.Swerve.rotationPID[1],
+                                Constants.Swerve.rotationPID[2]) // Rotation PID constants
                     ),
                     config, //the robot configuration
                     () -> {

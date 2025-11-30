@@ -4,12 +4,16 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -31,6 +35,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final ExampleSubsystem m_exampleSubsystem;
   public final Chassis chassis;
+  public final SendableChooser<Command> autoChooser;
 
   //Mechanism Motors
   public final MultiUseTalonSRX multiUseTalon1;
@@ -63,6 +68,10 @@ public class RobotContainer {
 
     // Set Default commands
     chassis.setDefaultCommand(new TeleopDrive(chassis, operatorController));
+
+    //Auto chooser
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   /**
@@ -102,6 +111,9 @@ public class RobotContainer {
 
   public void resetOdometryForward() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+  public Command pick() {
+    return autoChooser.getSelected();
   }
 
   /**
