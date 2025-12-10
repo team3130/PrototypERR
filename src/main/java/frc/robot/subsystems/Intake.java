@@ -5,20 +5,27 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private final TalonSRX intake;
-  private double intakeSpeed = 0.6;
+
+  private double intakeSpeed = 0.3;
+
   public Intake() {
-    intake = new TalonSRX(0);
+    intake = new TalonSRX(Constants.CAN.Talon2);
+
     intake.configFactoryDefault();
-    intake.setInverted(true);
+    intake.setNeutralMode(NeutralMode.Brake);
+    intake.setInverted(false);
   }
 
   public void runIntake() {
@@ -31,9 +38,18 @@ public class Intake extends SubsystemBase {
     intake.set(ControlMode.PercentOutput, 0);
   }
 
+  public double getIntakeSpeed() {return intakeSpeed;}
+  public void setIntakeSpeed(double speed) {intakeSpeed = speed;}
+
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Indexer");
+
+    builder.addDoubleProperty("Intake Speed", this::getIntakeSpeed, this::setIntakeSpeed);
   }
 }
