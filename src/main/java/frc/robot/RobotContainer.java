@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.RotateTo90;
 import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Intake.RunIntake;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -79,6 +81,9 @@ public class RobotContainer {
     //Auto chooser
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    //Named commands are how commands will work when you use pathplanner. Put all 7 commands here in the same way. one is done for you
+    NamedCommands.registerCommand("Run Intake", new RunIntake(intake));
   }
 
   /**
@@ -93,11 +98,10 @@ public class RobotContainer {
   private void configureBindings() {
     new POVButton(operatorController, Constants.Xbox.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
 
-    //delete these 2 when ready, I have kept them as examples for you. Use operator controller
+    //I have one example for you. Use operator controller
     //one thing to note, the command "IndexToBeam" should be an "onTrue" binding not a "whileTrue". Think about why
     //Should total 7 commands
-    new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, 0.5));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, -0.5));
+    new JoystickButton(operatorController, Constants.Xbox.AXS_LTRIGGER).whileTrue(new RunIntake(intake));
   }
 
   public void exportShuffleBoardData() {
