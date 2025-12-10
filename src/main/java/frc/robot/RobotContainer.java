@@ -35,6 +35,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final ExampleSubsystem m_exampleSubsystem;
   public final Chassis chassis;
+  public final Intake intake;
+  public final Indexer indexer;
+  public final Shooter shooter;
   public final SendableChooser<Command> autoChooser;
 
   //Mechanism Motors
@@ -55,6 +58,10 @@ public class RobotContainer {
     m_exampleSubsystem = new ExampleSubsystem();
 
     chassis = new Chassis();
+    intake = new Intake();
+    indexer = new Indexer();
+    shooter = new Shooter();
+
     multiUseTalon1 = new MultiUseTalonSRX(Constants.CAN.Talon1);
     multiUseTalon2 = new MultiUseTalonSRX(Constants.CAN.Talon2);
     multiUseTalon3 = new MultiUseTalonSRX(Constants.CAN.Talon3);
@@ -84,17 +91,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    //new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
-    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
-    new POVButton(driverController, Constants.PS5.POV_E).whileTrue(new RotateTo90(chassis));
+    new POVButton(operatorController, Constants.Xbox.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
 
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new RunTalon(multiUseTalon1, 0));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalon(multiUseTalon2, 0.35));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunTalon(multiUseTalon3, -0.5));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunVictor(multiUseVictor4));
-    //new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunTalon(multiUseTalon5, 0.4));
-    //new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new RunTalonFX(falcon, -0.5));
-    //new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new RunTalonFX(falcon, 0.5));
+    //delete these 2 when ready, I have kept them as examples for you. Use operator controller
+    //one thing to note, the command "IndexToBeam" should be an "onTrue" binding not a "whileTrue". Think about why
+    //Should total 7 commands
     new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, 0.5));
     new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunTalonSRX(multiUseTalon5, -0.5));
   }
