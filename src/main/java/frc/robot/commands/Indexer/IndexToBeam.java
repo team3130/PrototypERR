@@ -5,21 +5,25 @@
 package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Indexer;
 
 //similar to normal indexing but look at my comments in the IsFinished command
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IndexToBeam extends Command {
+  private final Indexer indexer;
   /** Creates a new IndexToBeam. */
-  public IndexToBeam() {
+  public IndexToBeam(Indexer indexer) {
+    this.indexer = indexer;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //should just run index normally
-
+    indexer.runIndex();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,14 +34,17 @@ public class IndexToBeam extends Command {
   @Override
   public void end(boolean interrupted) {
     //stop index
-
+    indexer.stopIndex();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     //if beam is false, return true. How do you do that?
+    if(!indexer.getFirstBeam()){
+      return true;
+    }
     //Hint: ! will invert from true to false or vice versa
-    return false;
+    else{return false;}
   }
 }

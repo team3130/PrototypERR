@@ -22,16 +22,19 @@ public class RunIntake extends Command {
   @Override
   public void initialize() {
     //call the function from Intake subsystem that runs the intake
+    intake.runIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     //call the function from Intake subsystem that stops the intake
+    intake.stopIntake();
   }
 
   // Returns true when the command should end.

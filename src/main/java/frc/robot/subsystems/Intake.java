@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
@@ -15,10 +16,10 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private final TalonSRX intake;
+  private final VictorSPX intake;
   private double intakeSpeed = 0.3;         //always keep this a small value when testing at first, preferably below 0.5 (50%)
   public Intake() {
-    intake = new TalonSRX(Constants.CAN.Talon2);  //Constants.CAN.Talon2 is just a number represented in Constants file.
+    intake = new VictorSPX(Constants.CAN.Victor4);  //Constants.CAN.Talon2 is just a number represented in Constants file.
     intake.configFactoryDefault();
     intake.setInverted(false);       //always keep this false when testing at first. change if needed
   }
@@ -34,8 +35,12 @@ public class Intake extends SubsystemBase {
   }
 
   //Make a getter and setter for intake speed below
-
-
+  public double getIntakeSpeed(){
+    return intakeSpeed;
+  }
+  public void setIntakeSpeed(double value){
+    intakeSpeed = value;
+  }
 
 
   public void InitSendable(SendableBuilder builder) {

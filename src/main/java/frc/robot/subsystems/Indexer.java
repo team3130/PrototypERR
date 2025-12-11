@@ -12,6 +12,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Indexer.IndexToBeam;
 
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
@@ -24,7 +25,7 @@ public class Indexer extends SubsystemBase {
   private double intakeSpeed = 0.6;
   public Indexer() {
     index1 = new TalonSRX(Constants.CAN.Talon3);      //Constants.CAN.Talon3 is just a number represented in Constants file.
-    index2 = new TalonSRX(Constants.CAN.Victor4);     //Constants.CAN.Victor4 is just a number represented in Constants file.
+    index2 = new TalonSRX(Constants.CAN.Talon2);     //Constants.CAN.Victor4 is just a number represented in Constants file.
     //See if you can initialize the intake beam yourself. The ID should be 0 for now
 
     index1.configFactoryDefault();
@@ -33,6 +34,7 @@ public class Indexer extends SubsystemBase {
 
     index2.configFactoryDefault();
     index2.setInverted(true);
+    index2.setNeutralMode(NeutralMode.Brake); 
 
   }
 
@@ -44,22 +46,28 @@ public class Indexer extends SubsystemBase {
     index1.set(ControlMode.PercentOutput, -intakeSpeed);
     index2.set(ControlMode.PercentOutput, -intakeSpeed);
   }
-  public void stopIntake() {
+  public void stopIndex() {
     index1.set(ControlMode.PercentOutput, 0);
     index2.set(ControlMode.PercentOutput, 0);
   }
   
   //getter and setter for intake speed
+  public double getIntakeSpeed(){
+    return intakeSpeed;
+  }
+  public void setIntakeSpeed(double value){
+    intakeSpeed = value;
+  }
 
 
 
   //getter for beam. indexBeam.get() will give you the value you want to return
-
+  public boolean getFirstBeam() {return getFirstBeam();}
 
 
   public void InitSendable(SendableBuilder builder){
     // Do this yourself using Intake subsystem as inspiration
-
+    builder.setSmartDashboardType("Index");
   }
 
   @Override
