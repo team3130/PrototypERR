@@ -16,19 +16,19 @@ import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private final VictorSPX intake;
-  private double intakeSpeed = 0.3;         //always keep this a small value when testing at first, preferably below 0.5 (50%)
+  private final TalonSRX intake;
+  private double intakeSpeed = 1;         //always keep this a small value when testing at first, preferably below 0.5 (50%)
   public Intake() {
-    intake = new VictorSPX(Constants.CAN.Victor4);  //Constants.CAN.Talon2 is just a number represented in Constants file.
+    intake = new TalonSRX(Constants.CAN.Talon3);  //Constants.CAN.Talon2 is just a number represented in Constants file.
     intake.configFactoryDefault();
     intake.setInverted(false);       //always keep this false when testing at first. change if needed
   }
 
   public void runIntake() {
-    intake.set(ControlMode.PercentOutput, intakeSpeed);
+    intake.set(ControlMode.PercentOutput, -intakeSpeed);
   }
   public void reverseIntake() {
-    intake.set(ControlMode.PercentOutput, -intakeSpeed);
+    intake.set(ControlMode.PercentOutput, intakeSpeed);
   }
   public void stopIntake() {
     intake.set(ControlMode.PercentOutput, 0);

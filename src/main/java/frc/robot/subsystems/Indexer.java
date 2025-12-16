@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,17 +18,17 @@ import frc.robot.commands.Indexer.IndexToBeam;
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
   private final TalonSRX index1;
-  private final TalonSRX index2;
+  private final VictorSPX index2;
 
   //uncomment line below whenever you read this
-  //private final DigitalInput indexBeam;
+  private final DigitalInput indexBeam;
 
-  private double intakeSpeed = 0.6;
+  private double intakeSpeed = 0.45;
   public Indexer() {
-    index1 = new TalonSRX(Constants.CAN.Talon3);      //Constants.CAN.Talon3 is just a number represented in Constants file.
-    index2 = new TalonSRX(Constants.CAN.Talon2);     //Constants.CAN.Victor4 is just a number represented in Constants file.
+    index1 = new TalonSRX(Constants.CAN.Talon2);      //Constants.CAN.Talon3 is just a number represented in Constants file.
+    index2 = new VictorSPX(Constants.CAN.Victor4);     //Constants.CAN.Victor4 is just a number represented in Constants file.
     //See if you can initialize the intake beam yourself. The ID should be 0 for now
-
+    indexBeam = new DigitalInput(0);
     index1.configFactoryDefault();
     index1.setInverted(true);
     index1.setNeutralMode(NeutralMode.Brake);         //when the motor is set to 0, enable the brake. do this for index2 as well
@@ -62,7 +63,7 @@ public class Indexer extends SubsystemBase {
 
 
   //getter for beam. indexBeam.get() will give you the value you want to return
-  public boolean getFirstBeam() {return getFirstBeam();}
+  public boolean getFirstBeam() {return indexBeam.get();}
 
 
   public void InitSendable(SendableBuilder builder){
