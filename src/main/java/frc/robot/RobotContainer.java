@@ -16,12 +16,18 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.RotateTo90;
 import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Indexer.Index;
+import frc.robot.commands.Indexer.IndexToBeam;
+import frc.robot.commands.Indexer.ReverseIndex;
+import frc.robot.commands.Intake.ReverseIntake;
 import frc.robot.commands.Intake.RunIntake;
+import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -49,6 +55,7 @@ public class RobotContainer {
   public final MultiUseVictor multiUseVictor4;
   public final MultiUseTalonSRX multiUseTalon5;
   public final MultiUseTalonFX falcon;
+  
 
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -63,6 +70,7 @@ public class RobotContainer {
     intake = new Intake();
     indexer = new Indexer();
     shooter = new Shooter();
+    
 
     multiUseTalon1 = new MultiUseTalonSRX(Constants.CAN.Talon1);
     multiUseTalon2 = new MultiUseTalonSRX(Constants.CAN.Talon2);
@@ -82,9 +90,9 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    //Named commands are how commands will work when you use pathplanner. Put all 7 commands here in the same way. one is done for you
-    NamedCommands.registerCommand("Run Intake", new RunIntake(intake));
-  }
+    //Named commands are how commands will work when you use pathplanner. Put all 7 commands here in the same way. one is done for you=
+
+    }
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -101,7 +109,12 @@ public class RobotContainer {
     //I have one example for you. Use operator controller
     //one thing to note, the command "IndexToBeam" should be an "onTrue" binding not a "whileTrue". Think about why
     //Should total 7 commands
-    new JoystickButton(operatorController, Constants.Xbox.AXS_LTRIGGER).whileTrue(new RunIntake(intake));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunShooter(shooter));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunIntake(intake));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new ReverseIntake(intake));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new Index(indexer));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_A).onTrue(new IndexToBeam(indexer));
+
   }
 
   public void exportShuffleBoardData() {

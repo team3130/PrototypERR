@@ -11,9 +11,9 @@ import frc.robot.subsystems.Indexer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Index extends Command {
-  private final Index indexer;
+  private final Indexer indexer;
   /** Creates a new IndexToBeam. */
-  public Index(Index indexer) {
+  public Index(Indexer indexer) {
     this.indexer = indexer;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(indexer);

@@ -18,7 +18,8 @@ public class RunIntake extends Command {
     //what the above function does it makes it so that if another command that requires the intake subsystem runs, it "interrupts" this one
   }
 
-  // Called when the command is initially scheduled.
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //call the function from Intake subsystem that runs the intake

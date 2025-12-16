@@ -4,8 +4,7 @@
 
 package frc.robot.commands.Intake;
 
-import java.lang.ModuleLayer.Controller;
-
+import frc.robot.commands.Intake.ReverseIntake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
@@ -14,16 +13,18 @@ import frc.robot.subsystems.Intake;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ReverseIntake extends Command {
   private final Intake intake;
-  private final Controller controller;
+
   /** Creates a new ReverseIntake. */
-  public ReverseIntake(Intake intake,Controller controller) {
+  public ReverseIntake(Intake intake) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.intake = intake;
-    this.controller = controller;
+    this.intake = intake;  
     addRequirements(intake);
   }
 
-  // Called when the command is initially scheduled.
+
+
+
+// Called when the command is initially scheduled.
   @Override
   public void initialize() {
     intake.reverseIntake();

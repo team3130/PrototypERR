@@ -41,10 +41,8 @@ public class IndexToBeam extends Command {
   @Override
   public boolean isFinished() {
     //if beam is false, return true. How do you do that?
-    if(!indexer.getFirstBeam()){
-      return true;
-    }
+    return !indexer.getFirstBeam();
     //Hint: ! will invert from true to false or vice versa
-    else{return false;}
+   
   }
 }
