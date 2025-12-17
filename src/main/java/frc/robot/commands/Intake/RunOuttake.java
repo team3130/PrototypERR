@@ -1,27 +1,27 @@
-package frc.robot.commands.Chassis;
+package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 
 public class RunOuttake extends Command {
-    private final Intake outtake;
+    private final Intake intake;
 
     public RunOuttake(Intake outtake) {
-        this.outtake = outtake;
+        this.intake = outtake;
         // each subsystem used by the command must be passed into the
         // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.outtake);
+        addRequirements(this.intake);
     }
 
     @Override
     public void initialize() {
-
+        intake.runOuttake();
     }
 
     @Override
     public void execute() {
-        outtake.runOuttake();
+
     }
 
     @Override
@@ -32,6 +32,6 @@ public class RunOuttake extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        outtake.stopIntake();
+        intake.stopIntake();
     }
 }
