@@ -24,10 +24,15 @@ public class Arm extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
     private final TalonFX arm;
     private double armSpeed = 0.75;
+    private final DigitalInput lowBeam;
+    private final DigitalInput highBeam;
+
     public Arm() {
         arm = new TalonFX(Constants.CAN.Arm);
         arm.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive).withNeutralMode(NeutralModeValue.Brake));
         arm.getConfigurator().apply(new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).withSupplyCurrentLimit(40));
+        lowBeam = new DigitalInput(LowBeam);
+        highBeam = new DigitalInput(HighBeam);
     }
 
     public void armUp() {
@@ -44,6 +49,9 @@ public class Arm extends SubsystemBase {
     public void setArmSpeed(double value) {armSpeed = value;}
 
     public double getPosition() {return arm.getPosition().getValueAsDouble();}
+
+    public boolean getLowBeam() {return lowBeam.get();}
+    public boolean getHighBeam() {return highBeam.get();}
 
     /**
      * Initializes the data we send on shuffleboard
