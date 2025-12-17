@@ -27,6 +27,7 @@ import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Indexer.ReverseIndex;
 import frc.robot.commands.Intake.ReverseIntake;
 import frc.robot.commands.Intake.RunIntake;
+import frc.robot.commands.Shooter.ReverseShooter;
 import frc.robot.commands.Shooter.RunShooter;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,6 +80,15 @@ public class RobotContainer {
     multiUseTalon5 = new MultiUseTalonSRX(Constants.CAN.Talon5);
     falcon = new MultiUseTalonFX();
 
+    //Named commands are how commands will work when you use pathplanner. Put all 7 commands here in the same way. one is done for you=
+    NamedCommands.registerCommand("Reverse Intake", new ReverseIntake(intake));
+    NamedCommands.registerCommand("Run Intake", new RunIntake(intake));
+    NamedCommands.registerCommand("Index", new Index(indexer));
+    NamedCommands.registerCommand("Index To Beam", new IndexToBeam(indexer));
+    NamedCommands.registerCommand("Run Shooter", new RunShooter(shooter));
+    NamedCommands.registerCommand("Reverse Shooter", new ReverseShooter(shooter));
+    NamedCommands.registerCommand("Reverse Index", new ReverseIndex(indexer));
+
     // Configure the trigger bindings
     configureBindings();
     exportShuffleBoardData();
@@ -89,9 +99,6 @@ public class RobotContainer {
     //Auto chooser
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    //Named commands are how commands will work when you use pathplanner. Put all 7 commands here in the same way. one is done for you=
-
     }
 
   /**
@@ -109,11 +116,14 @@ public class RobotContainer {
     //I have one example for you. Use operator controller
     //one thing to note, the command "IndexToBeam" should be an "onTrue" binding not a "whileTrue". Think about why
     //Should total 7 commands
+    new JoystickButton(operatorController, Constants.Xbox.BTN_Y).whileTrue(new ReverseShooter(shooter));
     new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new RunShooter(shooter));
     new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunIntake(intake));
     new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new ReverseIntake(intake));
     new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new Index(indexer));
     new JoystickButton(operatorController, Constants.Xbox.BTN_A).onTrue(new IndexToBeam(indexer));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_MENU).whileTrue(new ReverseIndex(indexer));
+
 
   }
 
@@ -125,6 +135,10 @@ public class RobotContainer {
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
+  }
+
+  public void updateOdometry() {
+    chassis.updateOdometryFromSwerve();
   }
 
   public void resetOdometryForward() {

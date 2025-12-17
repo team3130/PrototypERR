@@ -29,6 +29,9 @@ public class Shooter extends SubsystemBase {
   public void runShooter(){
     shooter.set(shooterSpeed);
   }
+  public void reverseShooter() {
+    shooter.set(-shooterSpeed);
+  }
 
   public void stopShooter() {
     shooter.set(0);
