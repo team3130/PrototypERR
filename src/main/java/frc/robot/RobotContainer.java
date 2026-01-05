@@ -77,6 +77,16 @@ public class RobotContainer {
     multiUseTalon5 = new MultiUseTalonSRX(Constants.CAN.Talon5);
     falcon = new MultiUseTalonFX();
 
+    NamedCommands.registerCommand("Run Intake", new RunIntake(intake));
+    NamedCommands.registerCommand("Run Outtake", new RunOuttake(intake));
+
+    NamedCommands.registerCommand("Index To Beam", new IndexToBeam(indexer));
+    NamedCommands.registerCommand("Basic Index", new BasicIndex(indexer));
+    NamedCommands.registerCommand("Reverse Index", new ReverseIndex(indexer));
+
+    NamedCommands.registerCommand("Shoot", new Shoot(shooter));
+    NamedCommands.registerCommand("Reverse Shoot", new ReverseShoot(shooter));
+
     // Configure the trigger bindings
     configureBindings();
     exportShuffleBoardData();
@@ -87,16 +97,6 @@ public class RobotContainer {
     //Auto chooser
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    NamedCommands.registerCommand("Run Intake", new RunIntake(intake));
-    NamedCommands.registerCommand("Run Outtake", new RunOuttake(intake));
-
-    NamedCommands.registerCommand("Index To Beam", new IndexToBeam(indexer));
-    NamedCommands.registerCommand("Basic Index", new BasicIndex(indexer));
-    NamedCommands.registerCommand("Reverse Index", new ReverseIndex(indexer));
-
-    NamedCommands.registerCommand("Shoot", new Shoot(shooter));
-    NamedCommands.registerCommand("Reverse Shoot", new ReverseShoot(shooter));
   }
 
   /**
@@ -111,14 +111,14 @@ public class RobotContainer {
   private void configureBindings() {
     new POVButton(operatorController, Constants.Xbox.POV_N).whileTrue(new InstantCommand(() -> {chassis.resetOdometry(new Pose2d());}, chassis));
 
-    new JoystickButton(operatorController, Constants.Xbox.AXS_LTRIGGER).whileTrue(new RunIntake(intake));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new RunOuttake(intake));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).whileTrue(new RunIntake(intake));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_Y).whileTrue(new RunOuttake(intake));
 
-    new JoystickButton(operatorController, Constants.Xbox.BTN_LBUMPER).onTrue(new IndexToBeam(indexer));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new BasicIndex(indexer));
-    new JoystickButton(operatorController, Constants.Xbox.BTN_B).whileTrue(new ReverseIndex(indexer));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_B).onTrue(new IndexToBeam(indexer));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_A).whileTrue(new BasicIndex(indexer));
+    new POVButton(operatorController, Constants.Xbox.POV_S).whileTrue(new ReverseIndex(indexer));
 
-    new JoystickButton(operatorController, Constants.Xbox.AXS_RTRIGGER).whileTrue(new Shoot(shooter));
+    new JoystickButton(operatorController, Constants.Xbox.BTN_RBUMPER).whileTrue(new Shoot(shooter));
     new JoystickButton(operatorController, Constants.Xbox.BTN_X).whileTrue(new ReverseShoot(shooter));
   }
 
@@ -126,10 +126,17 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
+      tab.add(indexer);
+      tab.add(intake);
+      tab.add(shooter);
       //tab.add(new RunFalcon(multiUseFalcon, 0.2));
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
+  }
+
+  public void updateOdometry() {
+    chassis.updateOdometryFromSwerve();
   }
 
   public void resetOdometryForward() {

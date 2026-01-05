@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -16,14 +17,14 @@ import frc.robot.Constants;
 public class Indexer extends SubsystemBase {
   /** Creates a new Indexer. */
   private final TalonSRX index1;
-  private final TalonSRX index2;
+  private final VictorSPX index2;
   private final DigitalInput indexBeam;
 
   private double intakeSpeed = 0.3;
 
   public Indexer() {
-    index1 = new TalonSRX(Constants.CAN.Talon3);
-    index2 = new TalonSRX(Constants.CAN.Victor4);
+    index1 = new TalonSRX(Constants.CAN.Talon2);
+    index2 = new VictorSPX(Constants.CAN.Victor4);
     indexBeam = new DigitalInput(0);
 
     index1.configFactoryDefault();

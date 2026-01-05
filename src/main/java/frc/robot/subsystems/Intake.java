@@ -18,14 +18,14 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private final TalonSRX intake;
 
-  private double intakeSpeed = 0.3;
+  private double intakeSpeed = -1;      //inverting didnt work for some reason
 
   public Intake() {
-    intake = new TalonSRX(Constants.CAN.Talon2);
+    intake = new TalonSRX(Constants.CAN.Talon3);
 
     intake.configFactoryDefault();
     intake.setNeutralMode(NeutralMode.Brake);
-    intake.setInverted(false);
+    intake.setInverted(true);
   }
 
   public void runIntake() {

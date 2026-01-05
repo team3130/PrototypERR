@@ -27,7 +27,7 @@ public class Shooter extends SubsystemBase {
     shooter.getConfigurator().apply(new TalonFXConfiguration());
     shooter.getConfigurator().apply(new MotorOutputConfigs()
     .withNeutralMode(NeutralModeValue.Coast)
-    .withInverted(InvertedValue.Clockwise_Positive));
+    .withInverted(InvertedValue.CounterClockwise_Positive));
   }
 
   public void shoot() {
