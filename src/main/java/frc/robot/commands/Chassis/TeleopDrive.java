@@ -15,11 +15,11 @@ import frc.robot.subsystems.Chassis;
    /** A default command to drive in teleop based off the joysticks*/
   public class TeleopDrive extends Command {
     private final Chassis chassis;
-    private final XboxController xboxController;
+    private final PS5Controller drivercontroller;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    public TeleopDrive(Chassis chassis, XboxController xboxController) {
+    public TeleopDrive(Chassis chassis, PS5Controller drivercontroller) {
       this.chassis = chassis;
-      this.xboxController = xboxController;
+      this.drivercontroller = drivercontroller;
 
       // Use addRequirements() here to declare subsystem dependencies.
       addRequirements(chassis);
@@ -49,15 +49,15 @@ import frc.robot.subsystems.Chassis;
       double y = 0d;
 
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-        y = xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_X);
-        x = xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_Y);
+        y = drivercontroller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
+        x = drivercontroller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
       } else { // blue alliance
-        y = -xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_X);
-        x = -xboxController.getRawAxis(Constants.Xbox.AXS_LJOYSTICK_Y);
+        y = -drivercontroller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
+        x = -drivercontroller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
       }
 
       // theta the same for both alliances
-      theta = -xboxController.getRawAxis(Constants.Xbox.AXS_RJOYSTICK_X);
+      theta = -drivercontroller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_X);
 
       // normal driving
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;

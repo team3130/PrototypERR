@@ -67,7 +67,7 @@ public class RobotContainer {
     exportShuffleBoardData();
 
     // Set Default commands
-    chassis.setDefaultCommand(new TeleopDrive(chassis, operatorController));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     //Auto chooser
     autoChooser = AutoBuilder.buildAutoChooser();
